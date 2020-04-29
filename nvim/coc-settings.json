@@ -1,6 +1,5 @@
 {
-	"rust-analyzer.cargo-watch.enable": false,
-	"rust-analyzer.serverPath": "/Users/ghassandockerdev/.cargo/bin/rust-analyzer",
-	"suggest.noselect": false
-
+  "rust-analyzer.serverPath": "/Users/ghassandockerdev/.cargo/bin/rust-analyzer",
+  "suggest.noselect": false,
+  "coc.preferences.formatOnSaveFiletypes": ["*"]
 }
