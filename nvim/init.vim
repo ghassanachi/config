@@ -37,12 +37,24 @@ Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
-Plug 'fatih/vim-go'
+"Plug 'fatih/vim-go'
 Plug 'dag/vim-fish'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 
 call plug#end()
+
+let g:coc_global_extensions = [
+	\ 'coc-snippets',
+	\ 'coc-pairs',
+	\ 'coc-rust-analyzer',
+	\ 'coc-go',
+	\ 'coc-tsserver',
+	\ 'coc-eslint',
+	\ 'coc-prettier',
+	\ 'coc-css',
+	\ 'coc-markdownlint',
+	\ ]
 
 if has('nvim')
     set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
@@ -328,6 +340,8 @@ command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, {'source': s:list_cmd(),
   \                               'options': '--tiebreak=index'}, <bang>0)
 
+" Format with prettier on save
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Open new file adjacent to current file
 nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -349,8 +363,8 @@ nnoremap j gj
 nnoremap k gk
 
 " 'Smart' nevigation
-nmap <silent> E <Plug>(coc-diagnostic-prev)
-nmap <silent> W <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>k <Plug>(coc-diagnostic-prev)
+nmap <silent> <leader>j <Plug>(coc-diagnostic-next)
 nmap <silent> <leader>l <Plug>(coc-diagnostic-info)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -365,10 +379,9 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
-" nmap <silent> F <Plug>(ale_lint)
-" nmap <silent> <C-l> <Plug>(ale_detail)
-" nmap <silent> <C-g> :close<cr>
 
+" Rename Variable
+nmap <silent> <leader>r <Plug>(coc-rename)
 
 " <leader><leader> toggles between buffers
 nnoremap <leader><leader> <c-^>

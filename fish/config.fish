@@ -41,26 +41,34 @@ set PATH $PATH $ANDROID_HOME/platform-tools
 # Flutter
 set PATH $PATH $HOME/tools/flutter/bin
 
+# Asdf (Node/Python version manager)
+source (brew --prefix asdf)/asdf.fish
 
 
-#Aliases
-abbr -a vim 'nvim'
-abbr -a e 'nvim'
 #Abbreviations
 abbr -a rm "trash"
 #Lsd
 abbr -a ls 'lsd'
 abbr -a ll 'lsd -l'
 abbr -a la 'lsd -a'
-abbr -a lll 'lsa -la'
+abbr -a lll 'lsd -la'
 abbr -a lt 'ls --tree'
 #udemy-dl
 abbr -a udemy-dl 'python ~/.bin/udemy-dl/udemy-dl.py'
+#
+abbr -a c cargo
+abbr -a e nvim
+abbr -a vim 'nvim'
+abbr -a o open
+abbr -a g git
+abbr -a gc 'git checkout'
+abbr -a ga 'git add -p'
+abbr -a vimdiff 'nvim -d'
+abbr -a ct 'cargo t'
+abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
+# Misc.
 abbr -a lzd 'lazydocker'
-abbr -a tk 'tk'
 abbr -a xee 'open -a "Xee³"'
-
-
 
 
 
