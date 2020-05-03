@@ -25,7 +25,7 @@ Plug 'chriskempson/base16-vim'
 
 
 " Fuzzy finder
-Plug 'airblade/vim-rooter'
+" Plug 'airblade/vim-rooter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
@@ -56,6 +56,21 @@ let g:coc_global_extensions = [
 	\ 'coc-markdownlint',
 	\ ]
 
+
+" Plugin settings
+let g:secure_modelines_allowed_items = [
+                \ "textwidth",   "tw",
+                \ "softtabstop", "sts",
+                \ "tabstop",     "ts",
+                \ "shiftwidth",  "sw",
+                \ "expandtab",   "et",   "noexpandtab", "noet",
+                \ "filetype",    "ft",
+                \ "foldmethod",  "fdm",
+                \ "readonly",    "ro",   "noreadonly", "noro",
+                \ "rightleft",   "rl",   "norightleft", "norl",
+                \ "colorcolumn"
+                \ ]
+
 if has('nvim')
     set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
     set inccommand=nosplit
@@ -78,20 +93,6 @@ syntax on
 hi Normal ctermbg=NONE
 " Brighter comments
 call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
-
-" Plugin settings
-let g:secure_modelines_allowed_items = [
-                \ "textwidth",   "tw",
-                \ "softtabstop", "sts",
-                \ "tabstop",     "ts",
-                \ "shiftwidth",  "sw",
-                \ "expandtab",   "et",   "noexpandtab", "noet",
-                \ "filetype",    "ft",
-                \ "foldmethod",  "fdm",
-                \ "readonly",    "ro",   "noreadonly", "noro",
-                \ "rightleft",   "rl",   "norightleft", "norl",
-                \ "colorcolumn"
-                \ ]
 
 " Lightline
 " let g:lightline = { 'colorscheme': 'wombat' }
@@ -124,12 +125,6 @@ let g:latex_indent_enabled = 1
 let g:latex_fold_envs = 0
 let g:latex_fold_sections = []
 
-" Open hotkeys
-map <C-p> :Files<CR>
-nmap <leader>; :Buffers<CR>
-
-" Quick-save
-nmap <leader>w :w<CR>
 
 " Don't confirm .lvimrc
 let g:localvimrc_ask = 0
@@ -321,6 +316,25 @@ map L $
 noremap <leader>p :read !xsel --clipboard --output<cr>
 noremap <leader>c :w !xsel -ib<cr><cr>
 
+" Fzf set to project root
+function! s:find_files()
+    let git_dir = system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+    if git_dir != ''
+        execute 'Files' git_dir
+    else
+        execute 'Files'
+    endif
+endfunction
+
+command! ProjectFiles execute s:find_files()
+
+" Open hotkeys
+nnoremap <C-p> :ProjectFiles<CR>
+nnoremap <leader>; :Buffers<CR>
+
+" Quick-save
+nmap <leader>w :w<CR>
+
 " <leader>s for Rg search
 noremap <leader>s :Rg
 let g:fzf_layout = { 'down': '~20%' }
@@ -370,6 +384,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
@@ -381,7 +396,7 @@ function! s:show_documentation()
 endfunction
 
 " Rename Variable
-nmap <silent> <leader>r <Plug>(coc-rename)
+nnoremap <silent> <leader>n <Plug>(coc-rename)
 
 " <leader><leader> toggles between buffers
 nnoremap <leader><leader> <c-^>
@@ -398,6 +413,10 @@ noremap <leader>m ct_
 " I can type :help on my own, thanks.
 map <F1> <Esc>
 imap <F1> <Esc>
+
+" Move lines up and down in visual mode
+xnoremap K :move '<-2<CR>gv-gv
+xnoremap J :move '>+1<CR>gv-gv
 
 
 " =============================================================================

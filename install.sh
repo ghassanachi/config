@@ -16,6 +16,9 @@ ln -s $HOME/dev/config/fish/ $HOME/.config/fish
 ln -sf $HOME/dev/config/tmux/tmux.conf $HOME/.tmux.conf
 ln -sf "$HOME/dev/config/tmux/tmux.conf.local" "$HOME/.tmux.conf.local"
 
+# Alacritty Conf
+rm $HOME/.config/alacritty 2> /dev/null
+ln -s $HOME/dev/config/alacritty/ $HOME/.config/alacritty
 
 echo "" 
 echo "Config Files Linked"
