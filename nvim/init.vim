@@ -25,7 +25,7 @@ Plug 'chriskempson/base16-vim'
 
 
 " Fuzzy finder
-" Plug 'airblade/vim-rooter'
+Plug 'airblade/vim-rooter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
@@ -47,7 +47,8 @@ call plug#end()
 let g:coc_global_extensions = [
 	\ 'coc-snippets',
 	\ 'coc-pairs',
-	\ 'coc-rust-analyzer',
+	"\ 'coc-rust-analyzer',
+	\ 'coc-rls',
 	\ 'coc-go',
 	\ 'coc-tsserver',
 	\ 'coc-eslint',
@@ -316,20 +317,8 @@ map L $
 noremap <leader>p :read !xsel --clipboard --output<cr>
 noremap <leader>c :w !xsel -ib<cr><cr>
 
-" Fzf set to project root
-function! s:find_files()
-    let git_dir = system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
-    if git_dir != ''
-        execute 'Files' git_dir
-    else
-        execute 'Files'
-    endif
-endfunction
-
-command! ProjectFiles execute s:find_files()
-
 " Open hotkeys
-nnoremap <C-p> :ProjectFiles<CR>
+nnoremap <C-p> :Files<CR>
 nnoremap <leader>; :Buffers<CR>
 
 " Quick-save
@@ -345,14 +334,8 @@ command! -bang -nargs=* Rg
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
 
-function! s:list_cmd()
-  let base = fnamemodify(expand('%'), ':h:.:S')
-  return base == '.' ? 'fd --type file --follow' : printf('fd --type file --follow | proximity-sort %s', shellescape(expand('%')))
-endfunction
-
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, {'source': s:list_cmd(),
-  \                               'options': '--tiebreak=index'}, <bang>0)
+" Fzf no preview
+let g:fzf_preview_window = ''
 
 " Format with prettier on save
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
