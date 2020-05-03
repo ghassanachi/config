@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =8
+let g:netrw_dirhistcnt =9
+let g:netrw_dirhist_9='/Users/ghassandockerdev/dev/config/alacritty'
 let g:netrw_dirhist_8='/Users/ghassandockerdev/Documents/Projects/tekton/tekton-tools/server/images/tomcat/8.5'
 let g:netrw_dirhist_7='/Users/ghassandockerdev/Documents/Projects/tekton/tekton-tools/server/images/tomcat'
 let g:netrw_dirhist_6='/Users/ghassandockerdev/Documents/Projects/tekton/tekton-tools/server/images'
