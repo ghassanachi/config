@@ -9,6 +9,10 @@ set TERM xterm-256color
 
 set -xg PATH /opt/local/bin /opt/local/sbin $PATH
 
+# Fzf
+setenv FZF_DEFAULT_COMMAND 'fd --type f --follow --exclude .git'
+setenv FZF_CTRL_T_COMMAND  'fd --type f --follow --exclude .git'
+setenv FZF_DEFAULT_OPTS '--height 20%'
 
 # Editor
 set -Ux EDITOR nvim
