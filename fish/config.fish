@@ -49,6 +49,10 @@ set PATH $PATH $HOME/tools/flutter/bin
 source (brew --prefix asdf)/asdf.fish
 
 
+#AutoJump
+[ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
+
+
 #Abbreviations
 abbr -a rm "trash"
 #Lsd
@@ -73,7 +77,8 @@ abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
 # Misc.
 abbr -a lzd 'lazydocker'
 abbr -a xee 'open -a "Xee³"'
-
+# AutoJump
+abbr -a z 'j'
 
 
 set -gx GOPATH $HOME/go
