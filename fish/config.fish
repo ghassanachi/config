@@ -49,11 +49,11 @@ set PATH $PATH $HOME/tools/flutter/bin
 source (brew --prefix asdf)/asdf.fish
 
 
-#AutoJump
+# AutoJump
 [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
 
 
-#Abbreviations
+# Abbreviations
 abbr -a rm "trash"
 #Lsd
 abbr -a ls 'lsd'
@@ -61,9 +61,9 @@ abbr -a ll 'lsd -l'
 abbr -a la 'lsd -a'
 abbr -a lll 'lsd -la'
 abbr -a lt 'ls --tree'
-#udemy-dl
+# udemy-dl
 abbr -a udemy-dl 'python ~/.bin/udemy-dl/udemy-dl.py'
-#
+# General
 abbr -a c cargo
 abbr -a e nvim
 abbr -a vim 'nvim'
@@ -76,10 +76,11 @@ abbr -a ct 'cargo t'
 abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
 # Misc.
 abbr -a lzd 'lazydocker'
-abbr -a xee 'open -a "Xee³"'
 # AutoJump
 abbr -a z 'j'
 
+# Alias
+alias xee 'open -a "Xee³"'
 
 set -gx GOPATH $HOME/go
 set -gx GOROOT $HOME/.go

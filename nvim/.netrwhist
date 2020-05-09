@@ -1,5 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =0
+let g:netrw_dirhistcnt =3
+let g:netrw_dirhist_3='/Users/ghassandockerdev/.local/share/myceleum/workspaces/9ca0cf2e-494e-410c-a421-cecbfb234cd5'
+let g:netrw_dirhist_2='/Users/ghassandockerdev/Documents/Projects/learning/rust/rustlings/exercises/strings'
+let g:netrw_dirhist_1='/Users/ghassandockerdev/dev/config/fish/functions'
 let g:netrw_dirhist_0='/Users/ghassandockerdev/Documents/Projects/learning/rust/rustlings'
 let g:netrw_dirhist_9='/Users/ghassandockerdev/dev/config/alacritty'
 let g:netrw_dirhist_8='/Users/ghassandockerdev/Documents/Projects/tekton/tekton-tools/server/images/tomcat/8.5'
@@ -7,6 +10,3 @@ let g:netrw_dirhist_7='/Users/ghassandockerdev/Documents/Projects/tekton/tekton-
 let g:netrw_dirhist_6='/Users/ghassandockerdev/Documents/Projects/tekton/tekton-tools/server/images'
 let g:netrw_dirhist_5='/Users/ghassandockerdev/Movies/Climbing'
 let g:netrw_dirhist_4='/Users/ghassandockerdev/Movies/TV Shows/Money Heist'
-let g:netrw_dirhist_3='/Users/ghassandockerdev/.config/fish'
-let g:netrw_dirhist_2='/Users/ghassandockerdev/dev/themes/iterm2/base16-iterm2'
-let g:netrw_dirhist_1='/Users/ghassandockerdev/Documents/Projects/learning/rust/grrs'
