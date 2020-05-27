@@ -14,7 +14,12 @@ SETUVAR _fish_abbr_e:nvim
 SETUVAR _fish_abbr_g:git
 SETUVAR _fish_abbr_ga:git\x20add\x20\x2dp
 SETUVAR _fish_abbr_gah:git\x20stash\x3b\x20and\x20git\x20pull\x20\x2d\x2drebase\x3b\x20and\x20git\x20stash\x20pop
-SETUVAR _fish_abbr_gc:git\x20checkout
+SETUVAR _fish_abbr_gb:git\x20branch
+SETUVAR _fish_abbr_gc:git\x20commit\x20\x2dm
+SETUVAR _fish_abbr_gca:git\x20commit\x20\x2d\x2damend\x20\x2dm
+SETUVAR _fish_abbr_gco:git\x20checkout
+SETUVAR _fish_abbr_gp:git\x20push
+SETUVAR _fish_abbr_gs:git\x20status
 SETUVAR _fish_abbr_la:lsd\x20\x2da
 SETUVAR _fish_abbr_ll:lsd\x20\x2dl
 SETUVAR _fish_abbr_lll:lsd\x20\x2dla
@@ -27,6 +32,8 @@ SETUVAR _fish_abbr_udemy_2D_dl:python\x20\x7e/\x2ebin/udemy\x2ddl/udemy\x2ddl\x2
 SETUVAR _fish_abbr_vim:nvim
 SETUVAR _fish_abbr_vimdiff:nvim\x20\x2dd
 SETUVAR _fish_abbr_xee:open\x20\x2da\x20\x22Xee\u00b3\x22
+SETUVAR _fish_abbr_yt:youtube\x2ddl\x20\x2d\x2dadd\x2dmetadata\x20\x2di
+SETUVAR _fish_abbr_yta:youtube\x2ddl\x20\x2d\x2dadd\x2dmetadata\x20\x2di\x20\x2dx\x20\x2df\x20bestaudio/best
 SETUVAR _fish_abbr_z:j
 SETUVAR fish_color_autosuggestion:555\x1ebrblack
 SETUVAR fish_color_cancel:\x2dr

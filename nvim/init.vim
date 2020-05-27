@@ -22,6 +22,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'chriskempson/base16-vim'
+Plug 'junegunn/goyo.vim'
 
 
 " Fuzzy finder
@@ -310,6 +311,9 @@ nnoremap <C-f> :sus<cr>
 " Jump to start and end of line using the home row keys
 map H ^
 map L $
+
+
+set clipboard=unnamedplus
 
 " Neat X clipboard integration
 " ,p will paste clipboard into buffer
