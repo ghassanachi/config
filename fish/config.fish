@@ -55,7 +55,7 @@ source (brew --prefix asdf)/asdf.fish
 
 # Abbreviations
 abbr -a rm "trash"
-#Lsd
+# Lsd
 abbr -a ls 'lsd'
 abbr -a ll 'lsd -l'
 abbr -a la 'lsd -a'
@@ -63,16 +63,25 @@ abbr -a lll 'lsd -la'
 abbr -a lt 'ls --tree'
 # udemy-dl
 abbr -a udemy-dl 'python ~/.bin/udemy-dl/udemy-dl.py'
+# youtube-dl
+abbr -a yt 'youtube-dl --add-metadata -i'
+abbr -a yta 'youtube-dl --add-metadata -i -x -f bestaudio/best'
 # General
 abbr -a c cargo
+abbr -a ct 'cargo t'
 abbr -a e nvim
 abbr -a vim 'nvim'
 abbr -a o open
+# Git
 abbr -a g git
-abbr -a gc 'git checkout'
 abbr -a ga 'git add -p'
+abbr -a gb 'git branch'
+abbr -a gc 'git commit -m'
+abbr -a gca 'git commit --amend -m'
+abbr -a gco 'git checkout'
+abbr -a gp 'git push'
+abbr -a gs 'git status'
 abbr -a vimdiff 'nvim -d'
-abbr -a ct 'cargo t'
 abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
 # Misc.
 abbr -a lzd 'lazydocker'
