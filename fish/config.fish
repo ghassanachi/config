@@ -64,8 +64,8 @@ abbr -a lt 'ls --tree'
 # udemy-dl
 abbr -a udemy-dl 'python ~/.bin/udemy-dl/udemy-dl.py'
 # youtube-dl
-abbr -a yt 'youtube-dl --add-metadata -i'
-abbr -a yta 'youtube-dl --add-metadata -i -x -f bestaudio/best'
+abbr -a yt 'youtube-dl'
+abbr -a yta 'youtube-dl -x -f bestaudio/best'
 # General
 abbr -a c cargo
 abbr -a ct 'cargo t'
