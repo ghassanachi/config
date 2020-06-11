@@ -1,4 +1,12 @@
 {
   "suggest.noselect": false,
-  "coc.preferences.formatOnSaveFiletypes": ["*"]
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "json",
+    "markdown",
+    "rust",
+    "go"
+  ],
+  "prettier.disableLanguages": ["javascript", "javascriptreact"],
+  "eslint.autoFixOnSave": true
 }
