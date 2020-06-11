@@ -38,7 +38,6 @@ Plug 'cespare/vim-toml'
 Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
-"Plug 'fatih/vim-go'
 Plug 'dag/vim-fish'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
@@ -48,9 +47,10 @@ call plug#end()
 let g:coc_global_extensions = [
 	\ 'coc-snippets',
 	\ 'coc-pairs',
-	"\ 'coc-rust-analyzer',
 	\ 'coc-rls',
+	\ 'coc-emmet',
 	\ 'coc-go',
+	\ 'coc-html',
 	\ 'coc-tsserver',
 	\ 'coc-eslint',
 	\ 'coc-prettier',

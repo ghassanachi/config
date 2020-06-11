@@ -32,8 +32,8 @@ SETUVAR _fish_abbr_udemy_2D_dl:python\x20\x7e/\x2ebin/udemy\x2ddl/udemy\x2ddl\x2
 SETUVAR _fish_abbr_vim:nvim
 SETUVAR _fish_abbr_vimdiff:nvim\x20\x2dd
 SETUVAR _fish_abbr_xee:open\x20\x2da\x20\x22Xee\u00b3\x22
-SETUVAR _fish_abbr_yt:youtube\x2ddl\x20\x2d\x2dadd\x2dmetadata\x20\x2di
-SETUVAR _fish_abbr_yta:youtube\x2ddl\x20\x2d\x2dadd\x2dmetadata\x20\x2di\x20\x2dx\x20\x2df\x20bestaudio/best
+SETUVAR _fish_abbr_yt:youtube\x2ddl
+SETUVAR _fish_abbr_yta:youtube\x2ddl\x20\x2dx\x20\x2df\x20bestaudio/best
 SETUVAR _fish_abbr_z:j
 SETUVAR fish_color_autosuggestion:555\x1ebrblack
 SETUVAR fish_color_cancel:\x2dr
@@ -61,4 +61,4 @@ SETUVAR fish_key_bindings:fish_vi_key_bindings
 SETUVAR fish_pager_color_description:B3A06D\x1eyellow
 SETUVAR fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
-SETUVAR fish_user_paths:/usr/local/sbin\x1e/usr/local/opt/openssl\x401\x2e1/bin\x1e/Users/ghassandockerdev/\x2efzf/bin
+SETUVAR fish_user_paths:/usr/local/sbin\x1e/usr/local/opt/openssl\x401\x2e1/bin\x1e/usr/local/sbin\x1e/usr/local/opt/openssl\x401\x2e1/bin\x1e/Users/ghassandockerdev/\x2efzf/bin\x1e/Users/ghassandockerdev/\x2eyarn/bin

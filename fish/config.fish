@@ -48,6 +48,11 @@ set PATH $PATH $HOME/tools/flutter/bin
 # Asdf (Node/Python version manager)
 source (brew --prefix asdf)/asdf.fish
 
+# libffi
+set -gx LDFLAGS "-L/usr/local/opt/libffi/lib"
+set -gx CPPFLAGS "-I/usr/local/opt/libffi/include"
+
+set -gx PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
 # AutoJump
 [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
