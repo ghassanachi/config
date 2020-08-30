@@ -23,7 +23,7 @@ Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 Plug 'chriskempson/base16-vim'
 Plug 'junegunn/goyo.vim'
-
+Plug 'morhetz/gruvbox'
 
 " Fuzzy finder
 Plug 'airblade/vim-rooter'
@@ -78,24 +78,8 @@ if has('nvim')
     set inccommand=nosplit
     noremap <C-q> :confirm qall<CR>
 end
-
 " deal with colors
-if !has('gui_running')
-  set t_Co=256
-endif
-if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
-  " screen does not (yet) support truecolor
-  set termguicolors
-endif
-set background=dark
-let base16colorspace=256
-let g:base16_shell_path="~/dev/others/base16/templates/shell/scripts/"
-colorscheme base16-gruvbox-dark-hard
-syntax on
-hi Normal ctermbg=NONE
-" Brighter comments
-call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
-
+autocmd vimenter * colorscheme gruvbox
 " Lightline
 " let g:lightline = { 'colorscheme': 'wombat' }
 let g:lightline = {
