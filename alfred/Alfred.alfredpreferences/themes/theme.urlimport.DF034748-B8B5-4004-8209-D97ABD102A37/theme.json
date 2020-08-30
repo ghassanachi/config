@@ -1,0 +1,61 @@
+{
+  "alfredtheme" : {
+    "result" : {
+      "textSpacing" : 5,
+      "subtext" : {
+        "size" : 12,
+        "colorSelected" : "#FFFFFFC4",
+        "font" : "System",
+        "color" : "#9D9D9D65"
+      },
+      "shortcut" : {
+        "size" : 16,
+        "colorSelected" : "#D6D7D6FF",
+        "font" : "System",
+        "color" : "#D6D7D632"
+      },
+      "backgroundSelected" : "#3C424DF8",
+      "text" : {
+        "size" : 16,
+        "colorSelected" : "#D6D7D6FF",
+        "font" : "System",
+        "color" : "#ECECECE5"
+      },
+      "iconPaddingHorizontal" : 4,
+      "paddingVertical" : 3,
+      "iconSize" : 32
+    },
+    "search" : {
+      "paddingVertical" : 0,
+      "background" : "#3B4A6300",
+      "spacing" : 0,
+      "text" : {
+        "size" : 24,
+        "colorSelected" : "#000000FF",
+        "font" : "System",
+        "color" : "#D6D6D6FF"
+      },
+      "backgroundSelected" : "#B3D7FFFF"
+    },
+    "window" : {
+      "color" : "#3D3E3EFF",
+      "paddingHorizontal" : 0,
+      "width" : 559,
+      "borderPadding" : 3,
+      "borderColor" : "#3C4149FF",
+      "blur" : 0,
+      "roundness" : 4,
+      "paddingVertical" : 0
+    },
+    "credit" : "Justin Hensley",
+    "separator" : {
+      "color" : "#CBCBCBF3",
+      "thickness" : 0
+    },
+    "scrollbar" : {
+      "color" : "#3C4556FF",
+      "thickness" : 2
+    },
+    "name" : "Pragmatic - Blue Steel variant"
+  }
+}
