@@ -1,0 +1,61 @@
+{
+  "alfredtheme" : {
+    "result" : {
+      "textSpacing" : 5,
+      "subtext" : {
+        "size" : 12,
+        "colorSelected" : "#4C4C4CFF",
+        "font" : "System",
+        "color" : "#333333FF"
+      },
+      "shortcut" : {
+        "size" : 16,
+        "colorSelected" : "#FFFFFFFF",
+        "font" : "System",
+        "color" : "#D2D2D2FF"
+      },
+      "backgroundSelected" : "#0606064C",
+      "text" : {
+        "size" : 20,
+        "colorSelected" : "#FFFFFFFF",
+        "font" : "System",
+        "color" : "#595959FF"
+      },
+      "iconPaddingHorizontal" : 6,
+      "paddingVertical" : 5,
+      "iconSize" : 40
+    },
+    "search" : {
+      "paddingVertical" : 0,
+      "background" : "#00000000",
+      "spacing" : 8,
+      "text" : {
+        "size" : 31,
+        "colorSelected" : "#000000FF",
+        "font" : "System",
+        "color" : "#FFFFFFFF"
+      },
+      "backgroundSelected" : "#22428AFF"
+    },
+    "window" : {
+      "color" : "#000000E2",
+      "paddingHorizontal" : 13,
+      "width" : 500,
+      "borderPadding" : 0,
+      "borderColor" : "#0000007F",
+      "blur" : 40,
+      "roundness" : 6,
+      "paddingVertical" : 12
+    },
+    "credit" : "Tobias Zils",
+    "separator" : {
+      "color" : "#CBCBCBF3",
+      "thickness" : 0
+    },
+    "scrollbar" : {
+      "color" : "#333434FF",
+      "thickness" : 0
+    },
+    "name" : "Dark Space Standard"
+  }
+}
