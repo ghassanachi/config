@@ -1,1 +1,1 @@
-/Users/ghassandockerdev/.local/share/omf/themes/spacefish/fish_prompt.fish
+/Users/ghassangedeonachi/.local/share/omf/themes/spacefish/fish_prompt.fish
