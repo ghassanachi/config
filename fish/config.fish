@@ -40,7 +40,7 @@ set -gx PATH $PATH $ANDROID_HOME/platform-tools
 set -gx PATH $PATH $HOME/tools/flutter/bin
 
 # Golang
-set -gx GOPATH $HOME/.go
+set -gx GOPATH $HOME/go
 set -gx GOROOT /usr/local/opt/go/libexec
 set -gx PATH $GOPATH/bin:$GOROOT/bin $PATH
 
@@ -55,6 +55,12 @@ set -gx PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
 # autojump
 [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
+
+# fnm
+fnm env --multi | source
+
+# pyenv 
+status --is-interactive; and source (pyenv init -|psub)
 
 # Abbreviations
 abbr -a rm "trash"
