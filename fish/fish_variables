@@ -28,6 +28,8 @@ SETUVAR _fish_abbr_lt:ls\x20\x2d\x2dtree
 SETUVAR _fish_abbr_lzd:lazydocker
 SETUVAR _fish_abbr_o:open
 SETUVAR _fish_abbr_rm:trash
+SETUVAR _fish_abbr_ta:tmux\x20attach
+SETUVAR _fish_abbr_tn:tmux\x20new\x20\x2ds
 SETUVAR _fish_abbr_udemy_2D_dl:python\x20\x7e/\x2ebin/udemy\x2ddl/udemy\x2ddl\x2epy
 SETUVAR _fish_abbr_vim:nvim
 SETUVAR _fish_abbr_vimdiff:nvim\x20\x2dd

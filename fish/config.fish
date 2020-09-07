@@ -44,14 +44,13 @@ set -gx GOPATH $HOME/.go
 set -gx GOROOT /usr/local/opt/go/libexec
 set -gx PATH $GOPATH/bin:$GOROOT/bin $PATH
 
-# Asdf (Node/Python version manager)
-# source /usr/local/opt/asdf/asdf.fish
-
 # libffi
 set -gx LDFLAGS "-L/usr/local/opt/libffi/lib"
 set -gx CPPFLAGS "-I/usr/local/opt/libffi/include"
 
 set -gx PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
+
+fnm env --multi | source
 
 # autojump
 [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
@@ -68,6 +67,8 @@ abbr -a c cargo
 abbr -a ct 'cargo t'
 abbr -a e nvim
 abbr -a vim 'nvim'
+abbr -a ta 'tmux attach'
+abbr -a tn 'tmux new -s'
 # Git
 abbr -a g git
 abbr -a ga 'git add -p'
