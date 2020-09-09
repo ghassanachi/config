@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =7
+let g:netrw_dirhistcnt =9
+let g:netrw_dirhist_9='/Users/ghassangedeonachi/dev/config/tmux'
+let g:netrw_dirhist_8='/Users/ghassangedeonachi/dev/config'
 let g:netrw_dirhist_7='/Users/ghassandockerdev/dev/config/alacritty'
 let g:netrw_dirhist_6='/Users/ghassandockerdev/dev/config/fish/functions'
 let g:netrw_dirhist_5='/Users/ghassandockerdev/.local/share/myceleum/workspaces'
@@ -8,5 +10,3 @@ let g:netrw_dirhist_3='/Users/ghassandockerdev/.local/share/myceleum/workspaces'
 let g:netrw_dirhist_2='/Users/ghassandockerdev/.local/share/myceleum/workspaces/e7d11dbf-1ed6-4ad3-a21f-4ebeaeb18f3f'
 let g:netrw_dirhist_1='/Users/ghassandockerdev/.local/share/myceleum/workspaces'
 let g:netrw_dirhist_0='/Users/ghassandockerdev/.local/share/myceleum/workspaces/56a34b38-51e6-454e-94e1-5c53a4f8bbae'
-let g:netrw_dirhist_9='/Users/ghassandockerdev/.local/share/myceleum/workspaces'
-let g:netrw_dirhist_8='/Users/ghassandockerdev/.local/share/myceleum/workspaces/cc01f046-1a0b-4d71-ae61-b1b373177daf'

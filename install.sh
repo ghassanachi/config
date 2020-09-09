@@ -27,6 +27,9 @@ ln -sf "$HOME/dev/config/tmux/tmux.conf.local" "$HOME/.tmux.conf.local"
 rm $HOME/.config/alacritty 2> /dev/null
 ln -s $HOME/dev/config/alacritty/ $HOME/.config/alacritty
 
+# Jetbrains idea config
+ln -sf $HOME/dev/config/jetbrains/.ideavimrc $HOME/.ideavimrc
+
 echo "" 
 echo "Config Files Linked"
 echo "" 

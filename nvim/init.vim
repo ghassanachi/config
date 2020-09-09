@@ -320,11 +320,11 @@ command! -bang -nargs=* Rg
 
 function! s:list_cmd()
   let base = fnamemodify(expand('%'), ':h:.:S')
-  return base == '.' ? 'fd --type file --follow' : printf('fd --type file --follow | proximity-sort %s', shellescape(expand('%')))
+  return base == '.' ? 'fd --type file --hidden --follow' : printf('fd --type file --hidden --follow | proximity-sort %s', shellescape(expand('%')))
 endfunction
 
 command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, {'source': 'fd --type file --follow', 
+  \ call fzf#vim#files(<q-args>, {'source': 'fd --type file --hidden --follow', 
   \                               'options': '--tiebreak=index'}, <bang>0)
 
 " Fzf no preview

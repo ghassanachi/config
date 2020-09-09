@@ -1,7 +1,7 @@
 {
   "items": [
     {
-      "title": "Home",
+      "title": "portal",
       "arg": "18",
       "space_hash": 1,
       "screens_hashes": [
@@ -11,15 +11,7 @@
     {
       "title": "Space 2",
       "arg": "19",
-      "space_hash": 44,
-      "screens_hashes": [
-        188980567
-      ]
-    },
-    {
-      "title": "Space 3",
-      "arg": "20",
-      "space_hash": 4,
+      "space_hash": 6,
       "screens_hashes": [
         188980567
       ]
