@@ -7,9 +7,14 @@ fish_vi_key_bindings
 set -xg PATH /opt/local/bin /opt/local/sbin $PATH
 
 # Fzf
-setenv FZF_DEFAULT_COMMAND 'fd --type f --follow --exclude .git'
-setenv FZF_CTRL_T_COMMAND  'fd --type f --follow --exclude .git'
+setenv FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
+setenv FZF_CTRL_T_COMMAND  'fd --type f --hidden --follow --exclude .git'
 setenv FZF_DEFAULT_OPTS '--height 20%'
+
+
+# Development
+# personal programs
+set -gx PATH $PATH $HOME/.bin
 
 # Editor
 set -Ux EDITOR nvim
@@ -17,17 +22,23 @@ set -Ux EDITOR nvim
 # direnv
 eval (direnv hook fish)
 
-# Openssl 
-# set -g fish_user_paths "/usr/local/opt/openssl@1.1/bin" $fish_user_paths
-# set -gx LDFLAGS "-L/usr/local/opt/openssl@1.1/lib"
-# set -gx CPPFLAGS "-I/usr/local/opt/openssl@1.1/include"
-# set -gx PKG_CONFIG_PATH "/usr/local/opt/openssl@1.1/lib/pkgconfig"
+# autojump
+[ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
 
+# Language Version manager
+# rbenv
+status --is-interactive; and source (rbenv init -|psub)
+
+# fnm
+fnm env --multi | source
+
+# pyenv 
+status --is-interactive; and source (pyenv init -|psub)
+
+
+# Languages
 #RUST
 set -gx PATH $HOME/.cargo/bin $PATH
-
-#Personal Scripts
-set -gx PATH $PATH $HOME/.bin
 
 # Android 
 set -gx ANDROID_HOME $HOME/Library/Android/sdk
@@ -43,23 +54,6 @@ set -gx PATH $PATH $HOME/tools/flutter/bin
 set -gx GOPATH $HOME/go
 set -gx GOROOT /usr/local/opt/go/libexec
 set -gx PATH $GOPATH/bin:$GOROOT/bin $PATH
-
-# libffi
-set -gx LDFLAGS "-L/usr/local/opt/libffi/lib"
-set -gx CPPFLAGS "-I/usr/local/opt/libffi/include"
-
-set -gx PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
-
-fnm env --multi | source
-
-# autojump
-[ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
-
-# fnm
-fnm env --multi | source
-
-# pyenv 
-status --is-interactive; and source (pyenv init -|psub)
 
 # Abbreviations
 abbr -a rm "trash"
