@@ -16,13 +16,13 @@ background_opacity: 1
 # Font Customization
 font:
   normal:
-    family: FuraCode Nerd Font
+    family: FiraCode Nerd Font
     style: Regular
   bold:
-    family: FuraCode Nerd Font
+    family: FiraCode Nerd Font
     style: Bold
   italic:
-    family: FuraCode Nerd Font
+    family: FiraCode Nerd Font
     style: Italic
   size: 14
   offset:
