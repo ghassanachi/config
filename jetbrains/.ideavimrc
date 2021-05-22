@@ -13,7 +13,9 @@ Plug 'justinmk/vim-sneak'
 " GUI enhancements
 Plug 'machakann/vim-highlightedyank'
 
-call plug#end()
+" Turn off bell notification
+set visualbell
+set noerrorbellsall plug#end()
 
 filetype plugin indent on
 set relativenumber number
