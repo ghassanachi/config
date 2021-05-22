@@ -2,6 +2,7 @@
 fish_vi_key_bindings
 
 ## PROGRAMS
+
 # MacPorts
 
 set -xg PATH /opt/local/bin /opt/local/sbin $PATH
@@ -10,6 +11,10 @@ set -xg PATH /opt/local/bin /opt/local/sbin $PATH
 setenv FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
 setenv FZF_CTRL_T_COMMAND  'fd --type f --hidden --follow --exclude .git'
 setenv FZF_DEFAULT_OPTS '--height 20%'
+
+#ffmpeg
+set -gx LDFLAGS "-L/usr/local/opt/libffi/lib"
+set -gx PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
 
 # Development
@@ -30,7 +35,7 @@ eval (direnv hook fish)
 status --is-interactive; and source (rbenv init -|psub)
 
 # fnm
-fnm env --multi | source
+fnm env | source
 
 # pyenv 
 status --is-interactive; and source (pyenv init -|psub)
@@ -53,7 +58,11 @@ set -gx PATH $PATH $HOME/tools/flutter/bin
 # Golang
 set -gx GOPATH $HOME/go
 set -gx GOROOT /usr/local/opt/go/libexec
-set -gx PATH $GOPATH/bin:$GOROOT/bin $PATH
+set -gx PATH $PATH $GOPATH/bin:$GOROOT/bin
+
+# SML NJ
+set -gx SMLPATH /usr/local/smlnj
+set -gx PATH $PATH $SMLPATH/bin
 
 # Abbreviations
 abbr -a rm "trash"
@@ -83,3 +92,6 @@ abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
 
 # Alias
 alias xee 'open -a "Xee³"'
+
+# Docker
+alias dfimage "docker run -v /var/run/docker.sock:/var/run/docker.sock --rm alpine/dfimage"
