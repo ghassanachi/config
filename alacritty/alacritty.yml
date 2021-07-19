@@ -5,7 +5,7 @@ window:
     columns: 140
     lines: 38
   padding:
-    x: 6
+    x: 2
     y: 24
   decorations: transparent
 scrolling:

@@ -38,6 +38,10 @@ status --is-interactive; and source (rbenv init -|psub)
 fnm env | source
 
 # pyenv 
+set -Ux PYENV_ROOT $HOME/.pyenv
+set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+status is-login; and pyenv init --path | source
+pyenv init - | source
 status --is-interactive; and source (pyenv init -|psub)
 
 
@@ -89,9 +93,8 @@ abbr -a gp 'git push'
 abbr -a gs 'git status'
 abbr -a vimdiff 'nvim -d'
 abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
-
 # Alias
 alias xee 'open -a "Xee³"'
-
 # Docker
 alias dfimage "docker run -v /var/run/docker.sock:/var/run/docker.sock --rm alpine/dfimage"
+
