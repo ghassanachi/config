@@ -5,8 +5,19 @@
     "json",
     "markdown",
     "rust",
-    "go"
+    "go",
+    "vue"
   ],
   "prettier.disableLanguages": ["javascript", "javascriptreact"],
-  "eslint.autoFixOnSave": true
+  "eslint.alwaysShowStatus": true,
+  "eslint.autoFixOnSave": true,
+  "rust-analyzer.checkOnSave.command": "clippy",
+  "yaml.format.enable": true,
+  "yaml.schemas": {
+    "kubernetes": "/*.ya?ml",
+    "https://json.schemastore.org/kustomization.json": "/kustomization.ya?ml",
+    "https://json.schemastore.org/circleciconfig.json": ".circleci/config.ya?ml",
+    "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "/docker-compose.ya?ml",
+    "https://json.schemastore.org/chart.json": "/Chart.ya?ml"
+  }
 }

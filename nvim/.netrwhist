@@ -1,5 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =1
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/Users/ghassangedeonachi/dev/side/strapi-ajjerni/server/scripts/seed/countries'
+let g:netrw_dirhist_3='/Users/ghassangedeonachi/dev/side/strapi-ajjerni/server/scripts/seed'
+let g:netrw_dirhist_2='/Users/ghassangedeonachi/dev/side/strapi-ajjerni/client/pages'
 let g:netrw_dirhist_1='/Users/ghassangedeonachi/dev/vm/vvv/config'
 let g:netrw_dirhist_0='/Users/ghassangedeonachi/Desktop/knowledge/templates'
 let g:netrw_dirhist_9='/Users/ghassangedeonachi/dev/working/myceleum/services/netlify/landing/static/icons'
@@ -7,6 +10,3 @@ let g:netrw_dirhist_8='/Users/ghassangedeonachi/dev/working/myceleum/services/ne
 let g:netrw_dirhist_7='/Users/ghassangedeonachi/Desktop/test'
 let g:netrw_dirhist_6='/Users/ghassangedeonachi/dev/config/fish/completions'
 let g:netrw_dirhist_5='/Users/ghassangedeonachi/dev/config/fish/functions'
-let g:netrw_dirhist_4='/Users/ghassangedeonachi/Desktop/aub-demo/initial/java-back'
-let g:netrw_dirhist_3='/Users/ghassangedeonachi/Desktop/cheat.js'
-let g:netrw_dirhist_2='/Users/ghassangedeonachi/.aws'
