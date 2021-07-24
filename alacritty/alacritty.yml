@@ -1,16 +1,12 @@
 # Window Customization
 window:
-  dynamic_title: true
   dimensions:
     columns: 140
     lines: 38
   padding:
-    x: 2
-    y: 24
-  decorations: transparent
-scrolling:
-  history: 10000
-  multiplier: 3
+    x: 8
+    y: 16
+  decorations: "buttonless"
 background_opacity: 1
 
 # Font Customization
