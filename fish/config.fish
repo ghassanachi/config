@@ -1,10 +1,8 @@
 # Global Settings
 fish_vi_key_bindings
+set -Ux EDITOR nvim
 
-## PROGRAMS
-
-# MacPorts
-
+## General
 set -xg PATH /opt/local/bin /opt/local/sbin $PATH
 
 # Fzf
@@ -16,13 +14,8 @@ setenv FZF_DEFAULT_OPTS '--height 20%'
 set -gx LDFLAGS "-L/usr/local/opt/libffi/lib"
 set -gx PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
-
-# Development
-# personal programs
+# Personal bin
 set -gx PATH $PATH $HOME/.bin
-
-# Editor
-set -Ux EDITOR nvim
 
 # direnv
 eval (direnv hook fish)
@@ -43,7 +36,6 @@ set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
 status is-login; and pyenv init --path | source
 pyenv init - | source
 status --is-interactive; and source (pyenv init -|psub)
-
 
 # Languages
 #RUST
@@ -98,3 +90,12 @@ alias xee 'open -a "Xee³"'
 # Docker
 alias dfimage "docker run -v /var/run/docker.sock:/var/run/docker.sock --rm alpine/dfimage"
 
+
+# Inspired by Jon load aws credentials
+function amz
+	set -gx AWS_ACCESS_KEY_ID (aws configure get default.aws_access_key_id | head -n1)
+	set -gx AWS_SECRET_ACCESS_KEY (aws configure get default.aws_secret_access_key | head -n1)
+	fish -c ($argv)
+	set -gx AWS_ACCESS_KEY_ID
+	set -gx AWS_SECRET_ACCESS_KEY
+end
