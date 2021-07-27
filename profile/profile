@@ -1,0 +1,44 @@
+# Global Settings
+fish_vi_key_bindings
+
+# the following interactively:
+set -Ux PYENV_ROOT $HOME/.pyenv
+set -U fish_user_paths $PYENV_ROOT/bin $fish_user_paths
+
+set -Ux EDITOR nvim
+
+# Fzf
+set -Ux FZF_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
+set -Ux FZF_CTRL_T_COMMAND  'fd --type f --hidden --follow --exclude .git'
+set -Ux FZF_DEFAULT_OPTS '--height 20%'
+
+#ffmpeg
+set -Ux LDFLAGS "-L/usr/local/opt/libffi/lib"
+set -Ux PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
+
+#Goland 
+set -Ux PATH $PATH $GOPATH/bin:$GOROOT/bin
+
+# Flutter
+set -Ux PATH $PATH $HOME/tools/flutter/bin
+
+# Android 
+set -Ux ANDROID_HOME $HOME/Library/Android/sdk
+
+# Golang
+set -Ux GOPATH $HOME/go
+set -Ux GOROOT /usr/local/opt/go/libexec
+
+# SML NJ
+set -Ux SMLPATH /usr/local/smlnj
+set -Ux PATH $PATH $SMLPATH/bin
+
+# colored man output
+# from http://linuxtidbits.wordpress.com/2009/03/23/less-colors-for-man-pages/
+set -Ux LESS_TERMCAP_mb \e'[01;31m'       # begin blinking
+set -Ux LESS_TERMCAP_md \e'[01;38;5;74m'  # begin bold
+set -Ux LESS_TERMCAP_me \e'[0m'           # end mode
+set -Ux LESS_TERMCAP_se \e'[0m'           # end standout-mode
+set -Ux LESS_TERMCAP_so \e'[38;5;246m'    # begin standout-mode - info box
+set -Ux LESS_TERMCAP_ue \e'[0m'           # end underline
+set -Ux LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline

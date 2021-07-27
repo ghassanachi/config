@@ -16,8 +16,18 @@ rm $HOME/.config/karabiner 2> /dev/null
 ln -s $HOME/dev/config/karabiner/ $HOME/.config/karabiner
 
 # phoenix config
-rm $HOME/.config/phoenix 2> /dev/null
-ln -s $HOME/dev/config/phoenix/ $HOME/.config/phoenix
+# rm $HOME/.config/phoenix 2> /dev/null
+# ln -s $HOME/dev/config/phoenix/ $HOME/.config/phoenix
+
+#  yabai config
+rm $HOME/.config/yabai 2> /dev/null
+ln -s $HOME/dev/config/yabai/ $HOME/.config/yabai
+#  skhd config
+rm $HOME/.config/skhd 2> /dev/null
+ln -s $HOME/dev/config/skhd/ $HOME/.config/skhd
+
+# profile 
+ln -sf $HOME/dev/config/profile/profile $HOME/.profile
 
 # Tmux Conf and Local
 ln -sf $HOME/dev/config/tmux/tmux.conf $HOME/.tmux.conf

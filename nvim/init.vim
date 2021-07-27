@@ -27,6 +27,7 @@ Plug 'justinmk/vim-sneak'
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
 " GUI enhancements
@@ -39,7 +40,8 @@ Plug 'andymass/vim-matchup'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/nvim-compe'
+Plug 'L3MON4D3/LuaSnip'
 
 
 " Syntactic language support
@@ -129,20 +131,85 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-
-  -- Forward to other plugins
-  require'completion'.on_attach(client)
+  vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 local servers = { "rust_analyzer", "pyright", "tsserver" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
+    capabilities = capabilities,
     flags = {
       debounce_text_changes = 150,
     }
   }
 end
+
+require('compe').setup {
+  source = {
+    path = true,
+    nvim_lsp = true,
+    luasnip = true,
+    buffer = true,
+    calc = false,
+    nvim_lua = false,
+    vsnip = false,
+    ultisnips = false,
+  },
+}
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+  local col = vim.fn.col '.' - 1
+  if col == 0 or vim.fn.getline('.'):sub(col, col):match '%s' then
+    return true
+  else
+    return false
+  end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menu
+--- jump to prev/next snippet's placeholder
+local luasnip = require 'luasnip'
+
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t '<C-n>'
+  elseif luasnip.expand_or_jumpable() then
+    return t '<Plug>luasnip-expand-or-jump'
+  elseif check_back_space() then
+    return t '<Tab>'
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t '<C-p>'
+  elseif luasnip.jumpable(-1) then
+    return t '<Plug>luasnip-jump-prev'
+  else
+    return t '<S-Tab>'
+  end
+end
+
+-- Map tab to the above tab complete functions
+vim.api.nvim_set_keymap('i', '<Tab>', 'v:lua.tab_complete()', { expr = true })
+vim.api.nvim_set_keymap('s', '<Tab>', 'v:lua.tab_complete()', { expr = true })
+vim.api.nvim_set_keymap('i', '<S-Tab>', 'v:lua.s_tab_complete()', { expr = true })
+vim.api.nvim_set_keymap('s', '<S-Tab>', 'v:lua.s_tab_complete()', { expr = true })
+
+-- Map compe confirm and complete functions
+vim.api.nvim_set_keymap('i', '<cr>', 'compe#confirm("<cr>")', { expr = true })
+vim.api.nvim_set_keymap('i', '<c-space>', 'compe#complete()', { expr = true })
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -153,7 +220,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 
 -- Telescope settings
- require("telescope").setup {
+require("telescope").setup {
   pickers = {
     -- Your special builtin config goes in here
     buffers = {
@@ -169,6 +236,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     }
   },
 }
+require('telescope').load_extension('fzy_native')
 END
 
 " Plugin settings
@@ -422,14 +490,6 @@ nnoremap <right> :bn<CR>
 " Move by line
 nnoremap j gj
 nnoremap k gk
-
-" Use <Tab> and <S-Tab> to navigate through popup menu
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-
-" use <Tab> as trigger keys
-imap <Tab> <Plug>(completion_smart_tab)
-imap <S-Tab> <Plug>(completion_smart_s_tab)
 
 " Show diagnostic popup on cursor hold
 " autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
