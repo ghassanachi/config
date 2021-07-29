@@ -3,8 +3,9 @@
 ##############################################
 
 # Focus
-meh - k: yabai -m window --focus east
-meh - j : yabai -m window --focus west
+
+meh - k : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "east" else "stack.next" end')
+meh - j : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "west" else "stack.prev" end')
 
 meh - w: yabai -m window --focus north
 meh - a: yabai -m window --focus west
@@ -12,15 +13,15 @@ meh - s: yabai -m window --focus south
 meh - d: yabai -m window --focus east
 
 # Swap 
-shift + alt - h : yabai -m window --swap west
-shift + alt - j : yabai -m window --swap south
-shift + alt - k : yabai -m window --swap north
-shift + alt - l : yabai -m window --swap east
+shift + cmd - h : yabai -m window --swap west
+shift + cmd - j : yabai -m window --swap south
+shift + cmd - k : yabai -m window --swap north
+shift + cmd - l : yabai -m window --swap east
 
-alt - a : yabai -m window --resize left:-40:0
-alt - s : yabai -m window --resize bottom:0:40
-alt - w : yabai -m window --resize top:0:-40
-alt - d : yabai -m window --resize right:40:0
+hyper - a : yabai -m window --resize left:-40:0 || yabai -m window --resize right:-40:0
+hyper - s : yabai -m window --resize bottom:0:40 || yabai -m window --resize top:0:40
+hyper - w : yabai -m window --resize top:0:-40 || yabai -m window --resize bottom:0:-40
+hyper - d : yabai -m window --resize right:40:0 || yabai -m window --resize left:40:0
 
 
 # helpers
@@ -43,7 +44,7 @@ meh - 8 : yabai -m space --focus 8
 
 meh - h : yabai -m space --focus prev
 meh - l : yabai -m space --focus next
-# e == 
+# return to last
 meh - return: yabai -m space --focus recent
 
 ##############################################
@@ -79,7 +80,8 @@ hyper - h : yabai -m window --space prev; yabai -m space --focus prev
 meh - space : yabai -m window --toggle zoom-fullscreen
 meh - f	    : yabai -m window --toggle native-fullscreen
 
-# Float and center
-#meh - "space" : yabai -m window --toggle float;\
-#          yabai -m window --grid 4:4:1:1:2:2
-
+# toggle stack and bsp
+meh - t : yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "stack" else "bsp" end')
+# float
+meh - c	: yabai -m window --toggle float
+	  
