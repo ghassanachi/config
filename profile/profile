@@ -33,6 +33,14 @@ set -Ux GOROOT /usr/local/opt/go/libexec
 set -Ux SMLPATH /usr/local/smlnj
 set -Ux PATH $PATH $SMLPATH/bin
 
+# Rust local 
+set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
+
+## Rust stuff
+set -Ux CARGO_INCREMENTAL 1
+set -Ux RUSTFLAGS "-C target-cpu=native"
+set -Ux RUST_BACKTRACE 1
+
 # colored man output
 # from http://linuxtidbits.wordpress.com/2009/03/23/less-colors-for-man-pages/
 set -Ux LESS_TERMCAP_mb \e'[01;31m'       # begin blinking
