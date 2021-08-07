@@ -553,6 +553,11 @@ autocmd BufRead *.xlsx.axlsx set filetype=ruby
 " Script plugins
 autocmd Filetype html,xml,xsl,php source ~/.config/nvim/scripts/closetag.vim
 
+"
+autocmd Filetype tex set nospell
+autocmd Filetype tex set tabstop=2
+
+
 " =============================================================================
 " # Footer
 " =============================================================================
