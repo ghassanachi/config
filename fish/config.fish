@@ -30,12 +30,16 @@ abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
 # --- Path Overide ---------------------------------------------------
 
 set -x PATH $PATH /opt/local/bin /opt/local/sbin 
+
 # Personal bin
 set -x PATH $PATH $HOME/.bin
 
 #RUST
 set -x PATH $PATH $HOME/.cargo/bin 
 set -x PATH $PATH $HOME/.cargo-target/release/
+
+#GO
+set -x PATH $PATH $GOPATH/bin
 
 # Android
 set -x PATH $PATH $ANDROID_HOME/emulator
