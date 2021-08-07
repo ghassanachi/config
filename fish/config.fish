@@ -2,7 +2,7 @@
 
 # General
 abbr -a rm "trash" 
-abbr -a ls 'lsd'
+alias ls 'exa --icons'
 abbr -a yt 'youtube-dl'
 abbr -a yta 'youtube-dl -x -f bestaudio/best'
 abbr -a xee 'open -a "Xee³"'
