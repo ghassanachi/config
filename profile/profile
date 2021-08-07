@@ -26,7 +26,7 @@ set -Ux PATH $PATH $HOME/tools/flutter/bin
 set -Ux ANDROID_HOME $HOME/Library/Android/sdk
 
 # Golang
-set -Ux GOPATH $HOME/go
+set -Ux GOPATH $HOME/.go
 set -Ux GOROOT /usr/local/opt/go/libexec
 
 # SML NJ
