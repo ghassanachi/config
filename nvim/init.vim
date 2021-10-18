@@ -29,6 +29,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'airblade/vim-rooter'
 
 " GUI enhancements
 Plug 'itchyny/lightline.vim'
@@ -46,7 +47,6 @@ Plug 'L3MON4D3/LuaSnip'
 
 " Syntactic language support
 Plug 'cespare/vim-toml'
-"Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'dag/vim-fish'
@@ -137,7 +137,8 @@ end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-local servers = { "rust_analyzer", "pyright", "tsserver" }
+-- local servers = { "rust_analyzer", "pyright", "tsserver", "denols" }
+local servers = { "rust_analyzer", "pyright",  "denols" }
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -147,6 +148,15 @@ for _, lsp in ipairs(servers) do
     }
   }
 end
+
+lspconfig.denols.setup{
+    on_attach = on_attach,
+    capabilities = capabilities,
+    init_options = {
+      enable = true,
+      lint = true,
+    }
+}
 
 require('compe').setup {
   source = {
@@ -556,6 +566,10 @@ autocmd Filetype html,xml,xsl,php source ~/.config/nvim/scripts/closetag.vim
 "
 autocmd Filetype tex set nospell
 autocmd Filetype tex set tabstop=2
+
+" Formatting
+autocmd FileType javascript,typescript lua vim.lsp.buf.formatting()
+autocmd FileType javascript,typescript setlocal ts=2 sts=2 sw=2
 
 
 " =============================================================================
