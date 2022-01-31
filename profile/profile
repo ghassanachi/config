@@ -16,9 +16,6 @@ set -Ux FZF_DEFAULT_OPTS '--height 20%'
 set -Ux LDFLAGS "-L/usr/local/opt/libffi/lib"
 set -Ux PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
-#Goland 
-set -Ux PATH $PATH $GOPATH/bin:$GOROOT/bin
-
 # Flutter
 set -Ux PATH $PATH $HOME/tools/flutter/bin
 
@@ -28,13 +25,14 @@ set -Ux ANDROID_HOME $HOME/Library/Android/sdk
 # Golang
 set -Ux GOPATH $HOME/.go
 set -Ux GOROOT /usr/local/opt/go/libexec
+set -Ux PATH $PATH $GOPATH/bin:$GOROOT/bin
 
 # SML NJ
 set -Ux SMLPATH /usr/local/smlnj
 set -Ux PATH $PATH $SMLPATH/bin
 
 # Rust local 
-set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
+# set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
 
 ## Rust stuff
 set -Ux CARGO_INCREMENTAL 1

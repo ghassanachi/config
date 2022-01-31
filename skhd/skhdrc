@@ -1,9 +1,14 @@
 ##############################################
+# HELP:
+# - meh = Caps
+# - hyper = Caps  + Cmd
+##############################################
+
+##############################################
 # Space Control
 ##############################################
 
 # Focus
-
 meh - k : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "east" else "stack.next" end')
 meh - j : yabai -m window --focus $(yabai -m query --spaces --space | jq -r 'if .type == "bsp" then "west" else "stack.prev" end')
 
@@ -32,7 +37,7 @@ meh - 0 : yabai -m space --balance
 # Space Navigation
 ##############################################
 
-# Spaces:  Alt + [NUM]
+# Spaces:  Caps + [NUM]
 meh - 1 : yabai -m space --focus 1
 meh - 2 : yabai -m space --focus 2
 meh - 3 : yabai -m space --focus 3
@@ -41,6 +46,7 @@ meh - 5 : yabai -m space --focus 5
 meh - 6 : yabai -m space --focus 6
 meh - 7 : yabai -m space --focus 7
 meh - 8 : yabai -m space --focus 8
+meh - 9 : yabai -m space --focus 9
 
 meh - h : yabai -m space --focus prev
 meh - l : yabai -m space --focus next
@@ -61,10 +67,22 @@ hyper - 5 : yabai -m window --space  5; yabai -m space --focus 5
 hyper - 6 : yabai -m window --space  6; yabai -m space --focus 6
 hyper - 7 : yabai -m window --space  7; yabai -m space --focus 7
 hyper - 8 : yabai -m window --space  8; yabai -m space --focus 8
+hyper - 8 : yabai -m window --space  9; yabai -m space --focus 9
 
 hyper - l : yabai -m window --space next; yabai -m space --focus next
 hyper - h : yabai -m window --space prev; yabai -m space --focus prev
 
+##############################################
+# Display Navigation 
+##############################################
+
+# Switch diplay focus
+meh - p: yabai -m display --focus prev
+meh - n : yabai -m display --focus next
+
+# Send window to display
+hyper - p : yabai -m window --display prev; yabai -m display --focus prev;
+hyper - n : yabai -m window --display next; yabai -m display --focus next;
 
 ##############################################
 # Sizing: Shift + [Alt/Cmd] + [DIR]

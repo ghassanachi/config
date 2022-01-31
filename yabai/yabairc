@@ -65,6 +65,7 @@ yabai -m rule --add app="Google Chrome"         space=^1
 
 # Terminal
 yabai -m rule --add app="Alacritty"             space=^2
+yabai -m rule --add app="Warp"             space=^2
 
 # Code
 yabai -m rule --add app="Code"			space=^3

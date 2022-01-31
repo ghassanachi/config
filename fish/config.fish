@@ -61,8 +61,7 @@ end
 
 eval (direnv hook fish)
 
-# j 
-[ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
+zoxide init --cmd j fish | source
 
 # Nvm for fish
  fnm env | source
