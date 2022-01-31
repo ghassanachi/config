@@ -7,7 +7,7 @@ window:
     x: 8
     y: 16
   decorations: "buttonless"
-background_opacity: 1
+  opactity: 1
 
 # Font Customization
 font:
