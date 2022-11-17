@@ -27,12 +27,16 @@ set -Ux GOPATH $HOME/.go
 set -Ux GOROOT /usr/local/opt/go/libexec
 set -Ux PATH $PATH $GOPATH/bin:$GOROOT/bin
 
+# Deno
+set DENO_INSTALL $HOME/.deno
+set PATH $PATH $DENO_INSTALL/bin:$PATH
+
 # SML NJ
 set -Ux SMLPATH /usr/local/smlnj
 set -Ux PATH $PATH $SMLPATH/bin
 
 # Rust local 
-# set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
+set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
 
 ## Rust stuff
 set -Ux CARGO_INCREMENTAL 1

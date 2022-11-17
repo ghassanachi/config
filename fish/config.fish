@@ -38,6 +38,10 @@ set -x PATH $PATH $HOME/.bin
 set -x PATH $PATH $HOME/.cargo/bin 
 set -x PATH $PATH $HOME/.cargo-target/release/
 
+# Deno
+set DENO_INSTALL $HOME/.deno
+set PATH $PATH $DENO_INSTALL/bin:$PATH
+
 #GO
 set -x PATH $PATH $GOPATH/bin
 
@@ -46,6 +50,10 @@ set -x PATH $PATH $ANDROID_HOME/emulator
 set -x PATH $PATH $ANDROID_HOME/tools
 set -x PATH $PATH $ANDROID_HOME/tools/bin
 set -x PATH $PATH $ANDROID_HOME/platform-tools
+
+# bun
+set -Ux BUN_INSTALL "/Users/ghassangedeonachi/.bun"
+fish_add_path "/Users/ghassangedeonachi/.bun/bin"
 
 # --- Tmux launcher --------------------------------------------------
 
@@ -162,4 +170,6 @@ function fish_greeting
 
 	set_color normal
 end
+
+
 
