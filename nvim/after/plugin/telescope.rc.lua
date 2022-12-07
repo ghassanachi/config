@@ -1,20 +1,19 @@
 local status, telescope = pcall(require, "telescope")
 if (not status) then return end
+local nnoremap = require("guts.core.keymap").nnoremap
 local builtin = require("telescope.builtin")
 
--- Use fzy_native for search
-telescope.load_extension('fzy_native')
+
+
 
 -- Change style to dropdown
 telescope.setup {
     pickers = {
         -- Your special builtin config goes in here
         buffers = {
-            sort_lastused = true,
             theme = "dropdown",
         },
         find_files = {
-            sort_lastused = true,
             theme = "dropdown",
         },
         live_grep = {
@@ -22,8 +21,11 @@ telescope.setup {
         }
     },
 }
+-- Use fzy_native for search
+telescope.load_extension('fzf')
 
 -- Find files using Telescope command-line sugar.
-vim.keymap.set('n', '<C-p>', builtin.find_files, {})
-vim.keymap.set('n', '<leader>;', builtin.buffers, {})
-vim.keymap.set('n', '<leader>s', builtin.live_grep, {})
+nnoremap('<C-p>', builtin.find_files)
+nnoremap('<leader>;', builtin.buffers)
+nnoremap('<leader>s', builtin.live_grep)
+nnoremap('<leader>h', builtin.highlights)

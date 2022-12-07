@@ -4,33 +4,35 @@ if (not status) then return end
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
+local nnoremap = require("guts.core.keymap").nnoremap
+
 local function config(_config, rt)
     return vim.tbl_deep_extend("force", {
         on_attach = function(_, bufnr)
             --Enable completion triggered by <c-x><c-o>
             vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-            vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr })
-            vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = bufnr })
-            vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr })
-            vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, { buffer = bufnr })
-            vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, { buffer = bufnr })
-            vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = bufnr })
-            vim.keymap.set('n', '<space>e', vim.lsp.diagnostic.show_line_diagnostics, { buffer = bufnr })
-            vim.keymap.set('n', '[d', vim.lsp.diagnostic.goto_prev, { buffer = bufnr })
-            vim.keymap.set('n', ']d', vim.lsp.diagnostic.goto_next, { buffer = bufnr })
-            vim.keymap.set('n', '<space>q', vim.lsp.diagnostic.set_loclist, { buffer = bufnr })
-            vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting, { buffer = bufnr })
-            -- Hover actions
+            nnoremap('gd', vim.lsp.buf.definition, { buffer = bufnr })
+            nnoremap('gi', vim.lsp.buf.implementation, { buffer = bufnr })
+            nnoremap('<C-k>', vim.lsp.buf.signature_help, { buffer = bufnr })
+            nnoremap('<space>D', vim.lsp.buf.type_definition, { buffer = bufnr })
+            nnoremap('<space>r', vim.lsp.buf.rename, { buffer = bufnr })
+            nnoremap('gr', vim.lsp.buf.references, { buffer = bufnr })
+            nnoremap('<space>e', vim.diagnostic.open_float, { buffer = bufnr })
+            nnoremap('[d', vim.diagnostic.goto_prev, { buffer = bufnr })
+            nnoremap(']d', vim.diagnostic.goto_next, { buffer = bufnr })
+            nnoremap("<space>f", vim.lsp.buf.format, { buffer = bufnr })
+            ---- Hover actions
             if rt == nil then
-                vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = bufnr })
-                vim.keymap.set('n', '<Leader>a', vim.lsp.buf.code_action, { buffer = bufnr })
+                nnoremap('K', vim.lsp.buf.hover, { buffer = bufnr })
+                nnoremap('<Leader>a', vim.lsp.buf.code_action, { buffer = bufnr })
             else
-                vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
-                vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
+                nnoremap("K", rt.hover_actions.hover_actions, { buffer = bufnr })
+                nnoremap("<Leader>a", rt.code_action_group.code_action_group,
+                    { buffer = bufnr })
             end
         end,
-        capabilities,
+        capabilities = capabilities,
     }, _config or {})
 end
 
@@ -42,6 +44,18 @@ lspconfig.denols.setup(config({
     }
 }))
 
+-- Typescript/Web LSP
+lspconfig.tsserver.setup(config({
+    filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+    -- Remove .git root_dir option to not conflict with denols
+    root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json")
+}))
+lspconfig.svelte.setup(config())
+lspconfig.tailwindcss.setup(config())
+-- lspconfig.cssls.setup(config())
+lspconfig.astro.setup(config())
+
+-- Lua LSP
 lspconfig.sumneko_lua.setup(config({
     settings = {
         Lua = {
@@ -100,4 +114,4 @@ rt.setup({
     },
 })
 
-vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]

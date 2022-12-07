@@ -31,22 +31,25 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+		</array>
+		<key>8542BB1E-7B22-4C45-9E2D-87EE14A12364</key>
+		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>5A0BDA1D-9FAD-419A-A869-14208717C310</string>
+				<string>95AE1D60-F9EF-4A57-9751-8798D25625D0</string>
 				<key>modifiers</key>
-				<integer>1048576</integer>
+				<integer>0</integer>
 				<key>modifiersubtext</key>
-				<string>Automatically paste to most front app</string>
+				<string></string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
 		</array>
-		<key>5A0BDA1D-9FAD-419A-A869-14208717C310</key>
+		<key>95AE1D60-F9EF-4A57-9751-8798D25625D0</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>58C4743B-D81B-450F-A12E-D623FF0244EF</string>
+				<string>EF4209F6-8C21-4B16-A231-5CB4469EAE18</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -73,6 +76,8 @@
 				<false/>
 				<key>clipboardtext</key>
 				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
 				<key>transient</key>
 				<false/>
 			</dict>
@@ -81,7 +86,7 @@
 			<key>uid</key>
 			<string>842D97E1-7350-4457-9A6D-C013F1968C20</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -112,21 +117,13 @@
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>import sys
-import uuid
-
-result = str(uuid.uuid4())
-
-if sys.stdout.isatty():
-    print(result)
-else:
-    sys.stdout.write(result)</string>
+				<string>uid uuid</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
-				<integer>3</integer>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
@@ -138,19 +135,23 @@ else:
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>autopaste</key>
-				<true/>
-				<key>clipboardtext</key>
-				<string>{query}</string>
-				<key>transient</key>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>ulid</string>
+				<key>subtext</key>
+				<string>Paste new ULID to clipboard</string>
+				<key>text</key>
+				<string>Ulid Generator</string>
+				<key>withspace</key>
 				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.output.clipboard</string>
+			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
-			<string>58C4743B-D81B-450F-A12E-D623FF0244EF</string>
+			<string>8542BB1E-7B22-4C45-9E2D-87EE14A12364</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -160,28 +161,39 @@ else:
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>import sys
-import uuid
-
-result = str(uuid.uuid4())
-
-if sys.stdout.isatty():
-    print(result)
-else:
-    sys.stdout.write(result)</string>
+				<string>uid ulid</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
-				<integer>3</integer>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>5A0BDA1D-9FAD-419A-A869-14208717C310</string>
+			<string>95AE1D60-F9EF-4A57-9751-8798D25625D0</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>EF4209F6-8C21-4B16-A231-5CB4469EAE18</string>
+			<key>version</key>
+			<integer>3</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -191,39 +203,52 @@ else:
 		<key>09BED4E6-1382-4C80-AC36-5FDD3D3B6536</key>
 		<dict>
 			<key>xpos</key>
-			<integer>360</integer>
+			<real>360</real>
 			<key>ypos</key>
-			<integer>130</integer>
+			<real>130</real>
 		</dict>
 		<key>23FECE94-BD2A-4925-96B0-D153DCE85B41</key>
 		<dict>
 			<key>xpos</key>
-			<integer>140</integer>
+			<real>140</real>
 			<key>ypos</key>
-			<integer>130</integer>
-		</dict>
-		<key>58C4743B-D81B-450F-A12E-D623FF0244EF</key>
-		<dict>
-			<key>xpos</key>
-			<integer>570</integer>
-			<key>ypos</key>
-			<integer>290</integer>
-		</dict>
-		<key>5A0BDA1D-9FAD-419A-A869-14208717C310</key>
-		<dict>
-			<key>xpos</key>
-			<integer>360</integer>
-			<key>ypos</key>
-			<integer>290</integer>
+			<real>130</real>
 		</dict>
 		<key>842D97E1-7350-4457-9A6D-C013F1968C20</key>
 		<dict>
 			<key>xpos</key>
-			<integer>570</integer>
+			<real>570</real>
 			<key>ypos</key>
-			<integer>130</integer>
+			<real>130</real>
+		</dict>
+		<key>8542BB1E-7B22-4C45-9E2D-87EE14A12364</key>
+		<dict>
+			<key>xpos</key>
+			<real>135</real>
+			<key>ypos</key>
+			<real>335</real>
+		</dict>
+		<key>95AE1D60-F9EF-4A57-9751-8798D25625D0</key>
+		<dict>
+			<key>xpos</key>
+			<real>355</real>
+			<key>ypos</key>
+			<real>335</real>
+		</dict>
+		<key>EF4209F6-8C21-4B16-A231-5CB4469EAE18</key>
+		<dict>
+			<key>xpos</key>
+			<real>565</real>
+			<key>ypos</key>
+			<real>335</real>
 		</dict>
 	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>variablesdontexport</key>
+	<array/>
+	<key>version</key>
+	<string></string>
 	<key>webaddress</key>
 	<string></string>
 </dict>
