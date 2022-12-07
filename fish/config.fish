@@ -1,59 +1,67 @@
 # --- Abbreviations ------------------------------------------------
 
 # General
-abbr -a rm "trash" 
 alias ls 'exa --icons'
-abbr -a yt 'youtube-dl'
-abbr -a yta 'youtube-dl -x -f bestaudio/best'
-abbr -a xee 'open -a "Xee³"'
+alias unset 'set --erase'
+abbr -a rm "trash" 
 
 # Coding
-abbr -a c cargo
-abbr -a ct 'cargo t'
-abbr -a e nvim
+abbr -a c   'cargo'
+abbr -a ct  'cargo t'
+abbr -a e   'nvim'
 abbr -a vim 'nvim'
-abbr -a ta 'tmux attach'
-abbr -a tn 'tmux new -s'
+abbr -a ta  'tmux attach'
+abbr -a tn  'tmux new -s'
 
 # Git
-abbr -a g git
-abbr -a ga 'git add -p'
-abbr -a gb 'git branch'
-abbr -a gc 'git commit -m'
+# General 
+abbr -a gco 'git'
+abbr -a gb  'git branch'
+abbr -a ga  'git add -p'
+abbr -a gc  'git commit -m'
 abbr -a gca 'git commit --amend -m'
 abbr -a gco 'git checkout'
-abbr -a gp 'git push'
-abbr -a gs 'git status'
-abbr -a vimdiff 'nvim -d'
+abbr -a gs  'git status'
+
+# Push 
+abbr -a gp  'git push'
+abbr -a gpa 'git push --all'
+abbr -a gpA 'git push --all && git push --tags'
+abbr -a gpt 'git push --tags'
+abbr -a gpc 'git push --set-upstream origin "$(git-branch-current 2> /dev/null)"'
+
+# Rebase
+abbr -a gr  'git rebase'
+abbr -a gra 'git rebase --abort'
+abbr -a grc 'git rebase --continue'
+abbr -a gri 'git rebase --interactive'
+abbr -a grs 'git rebase --skip'
+
+# Utils
 abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
+abbr -a vimdiff 'nvim -d'
 
 # --- Path Overide ---------------------------------------------------
 
-set -x PATH $PATH /opt/local/bin /opt/local/sbin 
+set -U fish_user_paths /opt/local/bin $fish_user_paths
+set -U fish_user_paths /usr/local/sbin $fish_user_paths
+set -U fish_user_paths $HOME/.bin $fish_user_paths
 
-# Personal bin
-set -x PATH $PATH $HOME/.bin
-
-#RUST
-set -x PATH $PATH $HOME/.cargo/bin 
-set -x PATH $PATH $HOME/.cargo-target/release/
+# Rust
+set -U fish_user_paths $HOME/.cargo/bin $fish_user_paths
+set -U fish_user_paths $HOME/.cargo-target/release $fish_user_paths
 
 # Deno
-set DENO_INSTALL $HOME/.deno
-set PATH $PATH $DENO_INSTALL/bin:$PATH
+set -Ux DENO_INSTALL $HOME/.deno
+set -U fish_user_paths $DENO_INSTALL/bin $fish_user_paths
 
-#GO
-set -x PATH $PATH $GOPATH/bin
-
-# Android
-set -x PATH $PATH $ANDROID_HOME/emulator
-set -x PATH $PATH $ANDROID_HOME/tools
-set -x PATH $PATH $ANDROID_HOME/tools/bin
-set -x PATH $PATH $ANDROID_HOME/platform-tools
+#Go
+set -Ux GOPATH $HOME/.go
+set -x fish_user_paths $GOPATH/bin $fish_user_paths
 
 # bun
-set -Ux BUN_INSTALL "/Users/ghassangedeonachi/.bun"
-fish_add_path "/Users/ghassangedeonachi/.bun/bin"
+set -Ux BUN_INSTALL $HOME/.bun
+set -x fish_user_paths $BUN_INSTALL/bin $fish_user_paths
 
 # --- Tmux launcher --------------------------------------------------
 
@@ -72,7 +80,7 @@ eval (direnv hook fish)
 zoxide init --cmd j fish | source
 
 # Nvm for fish
- fnm env | source
+fnm env | source
 
 # pyenv: use function since it it slow at starup
 function pyi 
