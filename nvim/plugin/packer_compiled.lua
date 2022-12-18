@@ -104,15 +104,10 @@ _G.packer_plugins = {
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/cmp-vsnip",
     url = "https://github.com/hrsh7th/cmp-vsnip"
   },
-  ["gitsigns.nvim"] = {
+  ["gruvbox.nvim"] = {
     loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/gitsigns.nvim",
-    url = "https://github.com/lewis6991/gitsigns.nvim"
-  },
-  gruvbox = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/gruvbox",
-    url = "https://github.com/gruvbox-community/gruvbox"
+    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/gruvbox.nvim",
+    url = "https://github.com/ellisonleao/gruvbox.nvim"
   },
   ["lspkind.nvim"] = {
     loaded = true,
@@ -133,11 +128,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
-  },
-  neogit = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/neogit",
-    url = "https://github.com/TimUntersberger/neogit"
   },
   ["nvim-autopairs"] = {
     loaded = true,
@@ -194,6 +184,11 @@ _G.packer_plugins = {
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/packer.nvim",
     url = "https://github.com/wbthomason/packer.nvim"
   },
+  playground = {
+    loaded = true,
+    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/playground",
+    url = "https://github.com/nvim-treesitter/playground"
+  },
   ["plenary.nvim"] = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/plenary.nvim",
@@ -218,6 +213,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
+  },
+  undotree = {
+    loaded = true,
+    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/undotree",
+    url = "https://github.com/mbbill/undotree"
   },
   ["vim-highlightedyank"] = {
     loaded = true,
