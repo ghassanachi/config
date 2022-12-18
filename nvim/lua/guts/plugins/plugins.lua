@@ -28,6 +28,7 @@ packer.startup(function(use)
     use 'airblade/vim-rooter'
     use 'windwp/nvim-autopairs'
     use 'windwp/nvim-ts-autotag'
+    use 'mbbill/undotree'
     --  use 'numToStr/Comment.nvim'
 
     -- Visual Enhancements
@@ -37,12 +38,12 @@ packer.startup(function(use)
     use 'norcalli/nvim-colorizer.lua'
 
     -- Color Scheme
-    use("gruvbox-community/gruvbox")
+    use { "ellisonleao/gruvbox.nvim" }
 
     -- LSP Configuration
     use 'williamboman/mason.nvim'
     use 'williamboman/mason-lspconfig.nvim'
-    use 'neovim/nvim-lspconfig' -- LSP
+    use 'neovim/nvim-lspconfig'
     use 'simrat39/rust-tools.nvim'
 
     -- Completion Configuration
@@ -66,12 +67,12 @@ packer.startup(function(use)
     use("theHamsta/nvim-dap-virtual-text")
 
     -- Treesitter Context Info and Playground
-    -- use("nvim-treesitter/playground")
+    use("nvim-treesitter/playground")
     -- use("nvim-treesitter/nvim-treesitter-context")
 
     -- Git Support
-    use 'lewis6991/gitsigns.nvim'
-    use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
+    -- use 'lewis6991/gitsigns.nvim'
+    -- use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
 
     if packer_bootstrap then
         packer.sync()

@@ -10,6 +10,9 @@ cmp.setup({
             vim.fn["vsnip#anonymous"](args.body)
         end,
     },
+    view = {
+        entries = { name = 'custom', selection_order = 'near_cursor' }
+    },
     mapping = {
         ['<C-p>'] = cmp.mapping.select_prev_item(),
         ['<C-n>'] = cmp.mapping.select_next_item(),
@@ -31,9 +34,6 @@ cmp.setup({
     },
     experimental = {
         ghost_text = true,
-    },
-    window = {
-        documentation = cmp.config.window.bordered(),
     },
 })
 

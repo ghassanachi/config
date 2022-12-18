@@ -1,8 +1,6 @@
 local status, tsc = pcall(require, "treesitter-context")
 if (not status) then return end
 
-local nnoremap = require("guts.core.keymap").nnoremap
-
 function ContextSetup(show_all_context)
     tsc.setup({
         enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
@@ -12,7 +10,7 @@ function ContextSetup(show_all_context)
         patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
             -- For all filetypes
             -- Note that setting an entry here replaces all other patterns for this entry.
-            -- By setting the 'default' entry below, you can control which nodes you want to
+            -- By setting the "default" entry below, you can control which nodes you want to
             -- appear in the context window.
             default = {
                 "function",
@@ -38,6 +36,6 @@ function ContextSetup(show_all_context)
     })
 end
 
-nnoremap('<leader>cf', function() ContextSetup(true) end)
-nnoremap('<leader>cp', function() ContextSetup(false) end)
+vim.keymap.set("n", "<leader>cf", function() ContextSetup(true) end)
+vim.keymap.set("n", "<leader>cp", function() ContextSetup(false) end)
 ContextSetup(false)
