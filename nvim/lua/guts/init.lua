@@ -1,22 +1,13 @@
-require('guts.core.base')
-require('guts.core.highlights')
-require('guts.core.maps')
-require('guts.core.diagnostics')
-require('guts.core.completions')
-require('guts.plugins.plugins')
-require('guts.plugins.bootstrap')
+require('guts.set')
+require('guts.maps')
+require('guts.plugins')
 
-local has = vim.fn.has
-local is_mac = has "macunix"
-local is_unix = has "unix"
-local is_win = has "win32"
+function R(name)
+    require("plenary.reload").reload_module(name)
+end
 
-if is_unix then
-	require('guts.os.linux')
-end
-if is_mac then
-	require('guts.os.macos')
-end
-if is_win then
-	require('guts.os.windows')
+if vim.fn.has('win32') then
+    vim.opt.clipboard:prepend { 'unnamed', 'unnamedplus' }
+else
+    vim.opt.clipboard:append { 'unnamedplus' }
 end

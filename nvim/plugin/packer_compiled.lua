@@ -74,6 +74,11 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  LuaSnip = {
+    loaded = true,
+    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/LuaSnip",
+    url = "https://github.com/L3MON4D3/LuaSnip"
+  },
   ["cmp-buffer"] = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/cmp-buffer",
@@ -99,20 +104,25 @@ _G.packer_plugins = {
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/cmp-path",
     url = "https://github.com/hrsh7th/cmp-path"
   },
-  ["cmp-vsnip"] = {
+  cmp_luasnip = {
     loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/cmp-vsnip",
-    url = "https://github.com/hrsh7th/cmp-vsnip"
+    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
+    url = "https://github.com/saadparwaiz1/cmp_luasnip"
+  },
+  ["friendly-snippets"] = {
+    loaded = true,
+    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/friendly-snippets",
+    url = "https://github.com/rafamadriz/friendly-snippets"
   },
   ["gruvbox.nvim"] = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/gruvbox.nvim",
     url = "https://github.com/ellisonleao/gruvbox.nvim"
   },
-  ["lspkind.nvim"] = {
+  ["lsp-zero.nvim"] = {
     loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/lspkind.nvim",
-    url = "https://github.com/onsails/lspkind.nvim"
+    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/lsp-zero.nvim",
+    url = "https://github.com/VonHeikemen/lsp-zero.nvim"
   },
   ["lualine.nvim"] = {
     loaded = true,
@@ -144,21 +154,6 @@ _G.packer_plugins = {
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/nvim-colorizer.lua",
     url = "https://github.com/norcalli/nvim-colorizer.lua"
   },
-  ["nvim-dap"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/nvim-dap",
-    url = "https://github.com/mfussenegger/nvim-dap"
-  },
-  ["nvim-dap-ui"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/nvim-dap-ui",
-    url = "https://github.com/rcarriga/nvim-dap-ui"
-  },
-  ["nvim-dap-virtual-text"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/nvim-dap-virtual-text",
-    url = "https://github.com/theHamsta/nvim-dap-virtual-text"
-  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
@@ -168,11 +163,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/nvim-treesitter",
     url = "https://github.com/nvim-treesitter/nvim-treesitter"
-  },
-  ["nvim-ts-autotag"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/nvim-ts-autotag",
-    url = "https://github.com/windwp/nvim-ts-autotag"
   },
   ["nvim-web-devicons"] = {
     loaded = true,
@@ -194,21 +184,6 @@ _G.packer_plugins = {
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
-  ["popup.nvim"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/popup.nvim",
-    url = "https://github.com/nvim-lua/popup.nvim"
-  },
-  ["rust-tools.nvim"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/rust-tools.nvim",
-    url = "https://github.com/simrat39/rust-tools.nvim"
-  },
-  ["telescope-fzf-native.nvim"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/telescope-fzf-native.nvim",
-    url = "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
-  },
   ["telescope.nvim"] = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/telescope.nvim",
@@ -228,16 +203,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/vim-rooter",
     url = "https://github.com/airblade/vim-rooter"
-  },
-  ["vim-sneak"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/vim-sneak",
-    url = "https://github.com/justinmk/vim-sneak"
-  },
-  ["vim-vsnip"] = {
-    loaded = true,
-    path = "/Users/ghassangedeonachi/.local/share/nvim/site/pack/packer/start/vim-vsnip",
-    url = "https://github.com/hrsh7th/vim-vsnip"
   }
 }
 

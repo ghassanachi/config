@@ -2,9 +2,6 @@ local status, telescope = pcall(require, "telescope")
 if (not status) then return end
 local builtin = require("telescope.builtin")
 
-
-
-
 -- Change style to dropdown
 telescope.setup {
     pickers = {
@@ -24,11 +21,9 @@ telescope.setup {
         }
     },
 }
--- Use fzy_native for search
-telescope.load_extension("fzf")
 
 -- Find files using Telescope command-line sugar.
-vim.keymap.set("n", "<C-p>", builtin.git_files)
+vim.keymap.set("n", "<C-p>", builtin.find_files)
 vim.keymap.set("n", "<leader>ps", builtin.find_files)
 vim.keymap.set("n", "<leader>;", builtin.buffers)
 vim.keymap.set("n", "<leader>g", builtin.live_grep)
