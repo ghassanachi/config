@@ -1,116 +1,71 @@
-local status, lspconfig = pcall(require, "lspconfig")
-if (not status) then return end
+local lsp_status, lsp = pcall(require, "lsp-zero")
+if (not lsp_status) then return end
+local cmp_status, cmp = pcall(require, "cmp");
+if (not cmp_status) then return end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+lsp.preset("recommended")
 
-local function config(_config)
-    return vim.tbl_deep_extend("force", {
-        on_attach = function(_, bufnr)
-            --Enable completion triggered by <c-x><c-o>
-            vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+lsp.ensure_installed({
+    'tsserver',
+    'eslint',
+    'lua_ls',
+    'rust_analyzer',
+})
 
-            vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr })
-            vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr })
-            vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
-            vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { buffer = bufnr })
-            vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { buffer = bufnr })
-            vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { buffer = bufnr })
-            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { buffer = bufnr })
-            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { buffer = bufnr })
-            vim.keymap.set("n", "<leader>h", vim.lsp.buf.signature_help, { buffer = bufnr })
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr })
-            vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, { buffer = bufnr })
-            -- vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, { buffer = bufnr })
-        end,
-        capabilities = capabilities,
-    }, _config or {})
-end
+local cmp_select = { behavior = cmp.SelectBehavior.Select }
+local cmp_mappings = lsp.defaults.cmp_mappings({
+        ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+        ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+        ["<C-u>"] = cmp.mapping.scroll_docs( -4),
+        ["<C-d>"] = cmp.mapping.scroll_docs(4),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        -- Add tab support
+        ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+        ['<C-e>'] = cmp.mapping.close(),
+    })
 
-vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
 
--- Deno Lsp
---lspconfig.denols.setup(config({
---    init_options = {
---        enable = true,
---        lint = true,
---    }
---}))
+lsp.set_preferences({
+    sign_icons = {}
+})
 
--- Typescript/Web Lsp
-lspconfig.tsserver.setup(config({
-    -- Remove .git root_dir option to not conflict with denols
-    root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json")
-}))
+lsp.setup_nvim_cmp({
+    mapping = cmp_mappings
+})
 
--- Svelte Lsp
-lspconfig.svelte.setup(config())
+lsp.on_attach(function(client, bufnr)
+    local opts = { buffer = bufnr, remap = false }
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, opts)
+    vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
+    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+    vim.keymap.set("n", "<leader>h", vim.lsp.buf.signature_help, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
+    if client.resolved_capabilities.document_formatting then
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            desc = "Auto format before save",
+            pattern = "<buffer>",
+            callback = vim.lsp.buf.formatting_sync,
+        })
+    end
+end)
 
--- Tailwind Lsp
-lspconfig.tailwindcss.setup(config())
+-- Language configurations
 
--- Lua LSP
-lspconfig.sumneko_lua.setup(config({
+-- Lua (Add vim global)
+lsp.configure('lua_ls', {
     settings = {
         Lua = {
-            runtime = {
-                -- Tell the language server which version of Lua you"re using (most likely LuaJIT in the case of Neovim)
-                version = "LuaJIT",
-                -- Setup your lua path
-                path = vim.split(package.path, ";"),
-            },
             diagnostics = {
-                -- Get the language server to recognize the `vim` global
-                globals = { "vim" },
-            },
-            workspace = {
-                -- Make the server aware of Neovim runtime files
-                library = {
-                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                    [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                },
-            },
-        },
-    },
-}))
-
-
--- Rust Tools Setup (unused)
-
-local rtstatus, rt = pcall(require, "rust-tools")
-if (not rtstatus) then return end
-
-rt.setup({
-    server = config({
-        settings = {
-            ["rust-analyser"] = {
-                cargo = {
-                    allFeatures = true,
-                },
-                completion = {
-                    postfix = {
-                        enable = false,
-                    },
-                },
-                checkOnSave = {
-                    command = "clippy",
-                },
-                inlayHints = {
-                    lifetimeElisionHints = {
-                        enable = "skip_trivial"
-                    },
-                    reborrowHints = {
-                        enable = "always"
-                    }
-                }
+                globals = { 'vim' }
             }
         }
-    }),
-    tools = {
-        inlay_hints = {
-            auto = true,
-            show_parameter_hints = false,
-            highlight = "NonText",
-        },
-    },
+    }
 })
+
+lsp.setup()

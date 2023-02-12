@@ -24,7 +24,10 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.ignorecase = true -- Case insensitive searching UNLESS /C or capital in search
 
+vim.opt.cursorline = true
 vim.opt.termguicolors = true
+vim.opt.colorcolumn = '80'
+vim.opt.background = 'dark'
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = 'yes'
@@ -32,8 +35,6 @@ vim.opt.signcolumn = 'yes'
 -- Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 -- delays and poor user experience.
 vim.opt.updatetime = 50
-
-vim.opt.colorcolumn = "80"
 
 -- Don't pass messages to |ins-completion-menu|.
 vim.opt.shortmess:append("c")

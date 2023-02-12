@@ -28,7 +28,7 @@ abbr -a gp  'git push'
 abbr -a gpa 'git push --all'
 abbr -a gpA 'git push --all && git push --tags'
 abbr -a gpt 'git push --tags'
-abbr -a gpc 'git push --set-upstream origin "$(git-branch-current 2> /dev/null)"'
+abbr -a gpc 'git push --set-upstream origin (git branch --show-current)'
 
 # Rebase
 abbr -a gr  'git rebase'
@@ -50,6 +50,12 @@ set -U fish_user_paths $HOME/.bin $fish_user_paths
 # Rust
 set -U fish_user_paths $HOME/.cargo/bin $fish_user_paths
 set -U fish_user_paths $HOME/.cargo-target/release $fish_user_paths
+
+set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
+set -Ux CARGO_INCREMENTAL 1
+set -Ux RUSTFLAGS "-C target-cpu=native"
+set -Ux RUST_BACKTRACE 1
+
 
 # Deno
 set -Ux DENO_INSTALL $HOME/.deno
@@ -178,6 +184,4 @@ function fish_greeting
 
 	set_color normal
 end
-
-
 

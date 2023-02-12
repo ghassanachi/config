@@ -1,4 +1,3 @@
-local reload = require("guts.core.utils.reload")
 -- ; as :
 vim.keymap.set("n", ";", ":")
 
@@ -20,6 +19,8 @@ vim.keymap.set("n", "<C-f>", ":sus<cr>")
 -- Jump to start and end of line using the home row keys
 vim.keymap.set("n", "H", "^")
 vim.keymap.set("n", "L", "$")
+vim.keymap.set("v", "H", "^")
+vim.keymap.set("v", "L", "$")
 
 --  Quick-save
 vim.keymap.set("n", "<leader>w", ":w<CR>")
@@ -78,11 +79,3 @@ vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left>
 
 -- Make the file executable
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
-
-
--- Reload config
-vim.api.nvim_create_user_command(
-    "ReloadConfig",
-    reload,
-    { desc = "Reload nvim configuration" }
-)

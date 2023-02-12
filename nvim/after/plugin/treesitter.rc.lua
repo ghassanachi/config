@@ -17,3 +17,7 @@ ts.setup {
 
     }
 }
+
+local tsc_status, treesitter_context = pcall(require, "treesitter-context")
+if (not tsc_status) then return end
+treesitter_context.setup {}
