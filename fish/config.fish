@@ -4,6 +4,7 @@
 alias ls 'exa --icons'
 alias unset 'set --erase'
 abbr -a rm "trash" 
+abbr -a cat "bat" 
 
 # Coding
 abbr -a c   'cargo'
@@ -14,7 +15,6 @@ abbr -a ta  'tmux attach'
 abbr -a tn  'tmux new -s'
 
 # Git
-# General 
 abbr -a gco 'git'
 abbr -a gb  'git branch'
 abbr -a ga  'git add -p'
@@ -45,6 +45,7 @@ abbr -a vimdiff 'nvim -d'
 
 set -U fish_user_paths /opt/local/bin $fish_user_paths
 set -U fish_user_paths /usr/local/sbin $fish_user_paths
+set -U fish_user_paths /usr/local/bin $fish_user_paths
 set -U fish_user_paths $HOME/.bin $fish_user_paths
 
 # Rust
@@ -69,14 +70,20 @@ set -x fish_user_paths $GOPATH/bin $fish_user_paths
 set -Ux BUN_INSTALL $HOME/.bun
 set -x fish_user_paths $BUN_INSTALL/bin $fish_user_paths
 
-# --- Tmux launcher --------------------------------------------------
 
+# --- Tmux launcher --------------------------------------------------
 if status --is-interactive
 	if test -d ~/dev/others/base16/templates/fish-shell
 		set fish_function_path $fish_function_path ~/dev/others/base16/templates/fish-shell/functions
 		builtin source ~/dev/others/base16/templates/fish-shell/conf.d/base16.fish
 	end
-	tmux attach 2> /dev/null; and exec true
+    if not set -q TMUX
+        if tmux has-session -t home
+	        exec tmux attach-session -t home
+        else
+            exec tmux new-session -s home
+        end
+    end
 end
 
 # --- Shell Hooks ----------------------------------------------------
@@ -87,6 +94,9 @@ zoxide init --cmd j fish | source
 
 # Nvm for fish
 fnm env | source
+
+# GCloud
+source "$(brew --prefix)/share/google-cloud-sdk/path.fish.inc"
 
 # pyenv: use function since it it slow at starup
 function pyi 
@@ -184,4 +194,3 @@ function fish_greeting
 
 	set_color normal
 end
-
