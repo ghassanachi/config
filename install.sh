@@ -15,10 +15,6 @@ ln -s $HOME/dev/config/fish/ $HOME/.config/fish
 rm $HOME/.config/karabiner 2> /dev/null
 ln -s $HOME/dev/config/karabiner/ $HOME/.config/karabiner
 
-# phoenix config
-# rm $HOME/.config/phoenix 2> /dev/null
-# ln -s $HOME/dev/config/phoenix/ $HOME/.config/phoenix
-
 #  yabai config
 rm $HOME/.config/yabai 2> /dev/null
 ln -s $HOME/dev/config/yabai/ $HOME/.config/yabai
@@ -39,6 +35,10 @@ ln -s $HOME/dev/config/alacritty/ $HOME/.config/alacritty
 
 # Jetbrains idea config
 ln -sf $HOME/dev/config/jetbrains/.ideavimrc $HOME/.ideavimrc
+
+# sketchybar
+rm $HOME/.config/sketchybar 2> /dev/null
+ln -s $HOME/dev/config/sketchybar/ $HOME/.config/sketchybar
 
 echo "" 
 echo "Config Files Linked"
