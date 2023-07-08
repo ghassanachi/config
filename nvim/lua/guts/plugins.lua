@@ -21,9 +21,17 @@ require('packer').startup(function(use)
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
-    use('nvim-treesitter/playground')
-    use 'airblade/vim-rooter'
+    use 'nvim-treesitter/playground'
+    use {
+        "ahmedkhalf/project.nvim",
+        config = function()
+            require("project_nvim").setup {
+                patterns = { ".git" },
+            }
+        end
+    }
     use 'windwp/nvim-autopairs'
+    use 'windwp/nvim-ts-autotag'
     use 'mbbill/undotree'
 
     -- Visual Enhancements
@@ -31,11 +39,14 @@ require('packer').startup(function(use)
     use 'machakann/vim-highlightedyank' -- Hilighted yank
     use 'kyazdani42/nvim-web-devicons' -- File icons
     use 'norcalli/nvim-colorizer.lua'
+    use 'folke/zen-mode.nvim'
 
     -- Color Scheme
-    use { "ellisonleao/gruvbox.nvim" }
+    use "ellisonleao/gruvbox.nvim"
 
     -- LSP Configuration
+    use 'jose-elias-alvarez/null-ls.nvim'
+    use "ray-x/lsp_signature.nvim"
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {

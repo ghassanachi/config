@@ -11,7 +11,6 @@ telescope.setup {
         },
         find_files = {
             theme = "dropdown",
-            no_ignore = true
         },
         git_files = {
             theme = "dropdown",
@@ -24,7 +23,7 @@ telescope.setup {
 
 -- Find files using Telescope command-line sugar.
 vim.keymap.set("n", "<C-p>", builtin.find_files)
-vim.keymap.set("n", "<leader>ps", builtin.find_files)
+vim.keymap.set("n", "<leader>gf", builtin.git_files)
 vim.keymap.set("n", "<leader>;", builtin.buffers)
 vim.keymap.set("n", "<leader>g", builtin.live_grep)
 vim.keymap.set("n", "<leader>h", builtin.highlights)

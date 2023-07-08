@@ -7,10 +7,6 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- Ctrl+h to stop searching
-vim.keymap.set("v", "<C-h>", ":nohlsearch<cr>")
-vim.keymap.set("n", "<C-h>", ":nohlsearch<cr>")
-
 -- Suspend with Ctrl+f
 vim.keymap.set("i", "<C-f>", ":sus<cr>")
 vim.keymap.set("v", "<C-f>", ":sus<cr>")
@@ -69,10 +65,10 @@ vim.keymap.set("x", "J", ":move '>+2<CR>gv-gv")
 vim.keymap.set("n", "<leader>d", vim.cmd.Ex)
 
 -- Quicklist helpers
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
+vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
 
 -- Fast renaming of under the cursor word
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
