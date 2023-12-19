@@ -17,7 +17,7 @@ require('packer').startup(function(use)
     -- General Utilities
     use 'nvim-lua/plenary.nvim'
     use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.1',
+        'nvim-telescope/telescope.nvim',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
     use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
@@ -35,9 +35,9 @@ require('packer').startup(function(use)
     use 'mbbill/undotree'
 
     -- Visual Enhancements
-    use 'nvim-lualine/lualine.nvim' -- Statusline
+    use 'nvim-lualine/lualine.nvim'     -- Statusline
     use 'machakann/vim-highlightedyank' -- Hilighted yank
-    use 'kyazdani42/nvim-web-devicons' -- File icons
+    use 'kyazdani42/nvim-web-devicons'  -- File icons
     use 'norcalli/nvim-colorizer.lua'
     use 'folke/zen-mode.nvim'
 

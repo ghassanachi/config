@@ -77,13 +77,13 @@ if status --is-interactive
 		set fish_function_path $fish_function_path ~/dev/others/base16/templates/fish-shell/functions
 		builtin source ~/dev/others/base16/templates/fish-shell/conf.d/base16.fish
 	end
-    if not set -q TMUX
-        if tmux has-session -t home
-	        exec tmux attach-session -t home
-        else
-            exec tmux new-session -s home
-        end
+	if not set -q TMUX
+    if tmux has-session -t home
+	    exec tmux attach-session -t home
+    else
+        exec tmux new-session -s home
     end
+  end
 end
 
 # --- Shell Hooks ----------------------------------------------------
@@ -160,37 +160,5 @@ function fish_greeting
 		echo "  [project] <description>"
 		echo
 	end
-
-	set_color normal
-	echo -e " \e[1mTODOs\e[0;32m"
-	echo
-	if [ $r -lt 10 ]
-		# unimportant, so show rarely
-		set_color cyan
-		# echo "  [project] <description>"
-	end
-	if [ $r -lt 25 ]
-		# back-of-my-mind, so show occasionally
-		set_color green
-		# echo "  [project] <description>"
-	end
-	if [ $r -lt 50 ]
-		# upcoming, so prompt regularly
-		set_color yellow
-		# echo "  [project] <description>"
-	end
-
-	# urgent, so prompt always
-	set_color red
-	# echo "  [project] <description>"
-
-	echo
-
-	if test -s ~/todo
-		set_color magenta
-		cat todo | sed 's/^/ /'
-		echo
-	end
-
 	set_color normal
 end
