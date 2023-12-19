@@ -57,8 +57,8 @@ vim.keymap.set("n", "<F1>", "<Esc>")
 vim.keymap.set("i", "<F1>", "<Esc>")
 
 -- Move lines up and down in visual mode
-vim.keymap.set("x", "K", ":move '<-1<CR>gv-gv")
-vim.keymap.set("x", "J", ":move '>+2<CR>gv-gv")
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 
 -- Call Ex to put you in directory mode

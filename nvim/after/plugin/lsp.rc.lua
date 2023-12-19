@@ -4,14 +4,18 @@ if (not lsp_status) then return end
 local cmp_status, cmp = pcall(require, "cmp");
 if (not cmp_status) then return end
 
+local lspconfig = require('lspconfig')
+
 lsp.preset("recommended")
 
 lsp.ensure_installed({
+    'denols',
     'tsserver',
     'eslint',
     'lua_ls',
     'rust_analyzer',
     'yamlls',
+    'svelte',
 })
 
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -84,6 +88,15 @@ lsp.configure('yamlls', {
             },
         },
     },
+})
+
+lsp.configure('denols', {
+    root_dir = lspconfig.util.root_pattern('deno.json', "deno.jsonc"),
+})
+
+lsp.configure("tsserver", {
+    root_dir = lspconfig.util.root_pattern('package.json'),
+    single_file_support = false,
 })
 
 lsp.setup()

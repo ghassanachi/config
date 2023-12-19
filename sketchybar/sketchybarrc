@@ -25,9 +25,9 @@ sketchybar --bar height=28        \
 # For a full list of all available item properties see:
 # https://felixkratz.github.io/SketchyBar/config/items
 
-sketchybar --default icon.font="Hack Nerd Font:Bold:17.0"  \
+sketchybar --default icon.font="Hack Nerd Font:Bold:14.0"  \
                      icon.color=0xffffffff                 \
-                     label.font="Hack Nerd Font:Bold:14.0" \
+                     label.font="Hack Nerd Font:Bold:12.0" \
                      label.color=0xffffffff                \
                      padding_left=5                        \
                      padding_right=5                       \
@@ -41,7 +41,7 @@ sketchybar --default icon.font="Hack Nerd Font:Bold:17.0"  \
 # https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
 # to indicate active and available mission control spaces
 
-SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
+SPACE_ICONS=("web" "term" "code" "tools" "media" "float" "full" "8" "9" "10")
 
 for i in "${!SPACE_ICONS[@]}"
 do
@@ -49,7 +49,7 @@ do
   sketchybar --add space space.$sid left                                 \
              --set space.$sid associated_space=$sid                      \
                               icon=${SPACE_ICONS[i]}                     \
-                              background.color=0x44ffffff                \
+                              background.color=0x33ffffff                \
                               background.corner_radius=5                 \
                               background.height=20                       \
                               background.drawing=off                     \
@@ -62,7 +62,12 @@ done
 # We add some regular items to the left side of the bar
 # only the properties deviating from the current defaults need to be set
 
-sketchybar --add item space_separator left                         \
+sketchybar --add item clock right                                  \
+           --set clock   update_freq=10                            \
+                         icon=                                    \
+                         script="$PLUGIN_DIR/clock.sh"             \
+                                                                   \
+           --add item space_separator left                         \
            --set space_separator icon=                            \
                                  padding_left=10                   \
                                  padding_right=10                  \
