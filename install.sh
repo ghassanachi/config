@@ -11,6 +11,10 @@ mkdir $HOME/.vimdid 2> /dev/null
 rm $HOME/.config/fish 2> /dev/null
 ln -s $HOME/dev/config/fish/ $HOME/.config/fish
 
+# starship prompt
+rm $HOME/.config/starship 2> /dev/null
+ln -s $HOME/dev/config/starship/starship.toml $HOME/.config/starship.toml
+
 # karabiner config
 rm $HOME/.config/karabiner 2> /dev/null
 ln -s $HOME/dev/config/karabiner/ $HOME/.config/karabiner
@@ -18,6 +22,7 @@ ln -s $HOME/dev/config/karabiner/ $HOME/.config/karabiner
 #  yabai config
 rm $HOME/.config/yabai 2> /dev/null
 ln -s $HOME/dev/config/yabai/ $HOME/.config/yabai
+
 #  skhd config
 rm $HOME/.config/skhd 2> /dev/null
 ln -s $HOME/dev/config/skhd/ $HOME/.config/skhd
@@ -39,6 +44,7 @@ ln -sf $HOME/dev/config/jetbrains/.ideavimrc $HOME/.ideavimrc
 # sketchybar
 rm $HOME/.config/sketchybar 2> /dev/null
 ln -s $HOME/dev/config/sketchybar/ $HOME/.config/sketchybar
+
 
 echo "" 
 echo "Config Files Linked"
