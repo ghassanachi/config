@@ -8,34 +8,22 @@ local lspconfig = require('lspconfig')
 
 lsp.preset("recommended")
 
-lsp.ensure_installed({
-    'denols',
-    'tsserver',
-    'eslint',
-    'lua_ls',
-    'rust_analyzer',
-    'yamlls',
-    'svelte',
-})
-
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-    ["<C-u>"] = cmp.mapping.scroll_docs( -4),
-    ["<C-d>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping.complete(),
-    -- Add tab support
-    ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+local cmp_mappings = cmp.setup({
+    mapping = {
+        ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+        ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+        ["<C-u>"] = cmp.mapping.scroll_docs( -4),
+        ["<C-d>"] = cmp.mapping.scroll_docs(4),
+        ["<C-Space>"] = cmp.mapping.complete(),
+        -- Add tab support
+        ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+  }
 })
 
 
 lsp.set_preferences({
     sign_icons = {}
-})
-
-lsp.setup_nvim_cmp({
-    mapping = cmp_mappings
 })
 
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})

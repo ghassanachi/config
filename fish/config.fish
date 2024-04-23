@@ -73,16 +73,12 @@ set -x fish_user_paths $BUN_INSTALL/bin $fish_user_paths
 
 # --- Tmux launcher --------------------------------------------------
 if status --is-interactive
-	if test -d ~/dev/others/base16/templates/fish-shell
-		set fish_function_path $fish_function_path ~/dev/others/base16/templates/fish-shell/functions
-		builtin source ~/dev/others/base16/templates/fish-shell/conf.d/base16.fish
-	end
 	if not set -q TMUX
-    if tmux has-session -t home
-	    exec tmux attach-session -t home
-    else
-        exec tmux new-session -s home
-    end
+    	if tmux has-session -t home
+	   	 exec tmux attach-session -t home
+    	else
+    	    exec tmux new-session -s home
+    	end
   end
 end
 
@@ -121,4 +117,3 @@ end
 
 # --- Shell Props ------------------------------------------------------
 set fish_greeting
-
