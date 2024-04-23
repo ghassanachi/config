@@ -3,7 +3,6 @@ if (not status) then return end
 
 -- Treesitter Plugin Setup
 ts.setup {
-    ensure_installed = { "help", "javascript", "typescript", "lua", "rust", "toml" },
     auto_install = true,
     highlight = {
         enable = true,
