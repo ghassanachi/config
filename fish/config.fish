@@ -14,6 +14,9 @@ abbr -a vim 'nvim'
 abbr -a ta  'tmux attach'
 abbr -a tn  'tmux new -s'
 
+# This is a bit janky but muscle memory is hard
+abbr -a yarn 'npm run'
+
 # Git
 abbr -a gco 'git'
 abbr -a gb  'git branch'
