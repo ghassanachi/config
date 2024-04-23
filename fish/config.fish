@@ -1,7 +1,7 @@
 # --- Abbreviations ------------------------------------------------
 
 # General
-alias ls 'exa --icons'
+alias ls 'lsd'
 alias unset 'set --erase'
 abbr -a rm "trash" 
 abbr -a cat "bat" 
@@ -95,8 +95,12 @@ zoxide init --cmd j fish | source
 # Nvm for fish
 fnm env | source
 
-# GCloud
-source "$(brew --prefix)/share/google-cloud-sdk/path.fish.inc"
+# fzf for fish
+fzf --fish | source
+
+# Prompt manager
+starship init fish | source
+
 
 # pyenv: use function since it it slow at starup
 function pyi 
@@ -114,51 +118,7 @@ function amz
 	set -e AWS_SECRET_ACCESS_KEY
 end
 
-function fish_prompt
-	set_color blue
-	echo -n (hostname | sed s/.local// )
-	if [ $PWD != $HOME ]
-		set_color brblack
-		echo -n ':'
-		set_color yellow
-		echo -n (basename $PWD)
-	end
-	set_color green
-	printf '%s ' (__fish_git_prompt)
-	set_color red
-	echo -n '| '
-	set_color normal
-end
 
-function fish_mode_prompt
-  switch $fish_bind_mode
-    case default
-      set_color red
-    case insert
-      set_color green
-    case replace_one
-      set_color green
-    case visual
-      set_color brmagenta
-    case '*'
-      set_color red
-  end
-  echo -n "["(date "+%H:%M")"] "
-  set_color normal
-end
+# --- Shell Props ------------------------------------------------------
+set fish_greeting
 
-function fish_greeting
-	echo
-	echo -e (uname -rs | awk '{print " \\\\e[1mOS: \\\\e[0;32m"$0"\\\\e[0m"}')
-	echo -e (uptime | sed 's/^up (.+) //' | awk '{print " \\\\e[1mUptime: \\\\e[0;32m"$1"\\\\e[0m"}')
-	echo -e (uname -n | awk '{print " \\\\e[1mHostname: \\\\e[0;32m"$0"\\\\e[0m"}')
-
-	set r (random 0 100)
-	if [ $r -lt 5 ] # only occasionally show backlog (5%)
-		echo -e " \e[1mBacklog\e[0;32m"
-		set_color blue
-		echo "  [project] <description>"
-		echo
-	end
-	set_color normal
-end

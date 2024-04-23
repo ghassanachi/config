@@ -1,1 +1,0 @@
-/Users/ghassangedeonachi/.fzf/shell/key-bindings.fish
