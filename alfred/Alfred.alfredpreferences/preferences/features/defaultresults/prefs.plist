@@ -4,9 +4,5 @@
 <dict>
 	<key>showContacts</key>
 	<false/>
-	<key>showDocuments</key>
-	<true/>
-	<key>showFolders</key>
-	<true/>
 </dict>
 </plist>

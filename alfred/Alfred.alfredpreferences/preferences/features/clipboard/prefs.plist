@@ -11,6 +11,8 @@
 		<key>string</key>
 		<string>P</string>
 	</dict>
+	<key>persistFor</key>
+	<integer>3</integer>
 	<key>snippetsAtTop</key>
 	<false/>
 	<key>snippetsWhenSearching</key>
