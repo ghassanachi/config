@@ -102,10 +102,8 @@ starship init fish | source
 
 
 # pyenv: use function since it it slow at starup
-function pyi 
-	status is-login; and pyenv init --path | source
-	pyenv init - --no-rehash | source
-end
+status is-login; and pyenv init --path | source
+pyenv init - --no-rehash | source
 
 # --- Functions ------------------------------------------------------
 

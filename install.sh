@@ -12,7 +12,7 @@ rm $HOME/.config/fish 2> /dev/null
 ln -s $HOME/dev/config/fish/ $HOME/.config/fish
 
 # starship prompt
-rm $HOME/.config/starship 2> /dev/null
+rm $HOME/.config/starship.toml 2> /dev/null
 ln -s $HOME/dev/config/starship/starship.toml $HOME/.config/starship.toml
 
 # karabiner config
@@ -27,7 +27,7 @@ ln -s $HOME/dev/config/yabai/ $HOME/.config/yabai
 rm $HOME/.config/skhd 2> /dev/null
 ln -s $HOME/dev/config/skhd/ $HOME/.config/skhd
 
-# profile 
+# profile
 ln -sf $HOME/dev/config/profile/profile $HOME/.profile
 
 # Tmux Conf and Local
@@ -46,8 +46,8 @@ rm $HOME/.config/sketchybar 2> /dev/null
 ln -s $HOME/dev/config/sketchybar/ $HOME/.config/sketchybar
 
 
-echo "" 
+echo ""
 echo "Config Files Linked"
-echo "" 
+echo ""
 
 
