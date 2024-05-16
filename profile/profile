@@ -3,8 +3,9 @@ fish_vi_key_bindings
 
 # Pyenv
 set -Ux PYENV_ROOT $HOME/.pyenv
-set -Ux PATH $PATH $PYENV_ROOT/bin 
+set -Ux PATH $PATH $PYENV_ROOT/bin
 
+set -Ux VISUAL nvim
 set -Ux EDITOR nvim
 
 # Fzf
@@ -16,7 +17,7 @@ set -Ux FZF_DEFAULT_OPTS '--height 20%'
 set -Ux LDFLAGS "-L/usr/local/opt/libffi/lib"
 set -Ux PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
-# Rust local 
+# Rust local
 set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
 
 ## Rust stuff
