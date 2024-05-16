@@ -1,3 +1,7 @@
+-- use system clipboard
+vim.opt.clipboard:prepend { 'unnamed', 'unnamedplus' }
+vim.opt.clipboard:append { 'unnamedplus' }
+
 vim.opt.nu = true
 vim.opt.relativenumber = true
 

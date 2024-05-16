@@ -65,14 +65,13 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "<leader>d", vim.cmd.Ex)
 
 -- Quicklist helpers
-vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
+-- vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
+-- vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
+-- vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
+-- vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
 
 -- Fast renaming of under the cursor word
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 
 -- Make the file executable
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
-
