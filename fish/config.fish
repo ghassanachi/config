@@ -3,8 +3,8 @@
 # General
 alias ls 'lsd'
 alias unset 'set --erase'
-abbr -a rm "trash" 
-abbr -a cat "bat" 
+abbr -a rm "trash"
+abbr -a cat "bat"
 
 # Coding
 abbr -a c   'cargo'
@@ -15,7 +15,7 @@ abbr -a ta  'tmux attach'
 abbr -a tn  'tmux new -s'
 
 # This is a bit janky but muscle memory is hard
-abbr -a yarn 'npm run'
+# abbr -a yarn 'npm run'
 
 # Git
 abbr -a gco 'git'
@@ -26,7 +26,7 @@ abbr -a gca 'git commit --amend -m'
 abbr -a gco 'git checkout'
 abbr -a gs  'git status'
 
-# Push 
+# Push
 abbr -a gp  'git push'
 abbr -a gpa 'git push --all'
 abbr -a gpA 'git push --all && git push --tags'
@@ -75,12 +75,13 @@ set -x fish_user_paths $BUN_INSTALL/bin $fish_user_paths
 
 
 # --- Tmux launcher --------------------------------------------------
+
 if status --is-interactive
 	if not set -q TMUX
     	if tmux has-session -t home
 	   	 exec tmux attach-session -t home
     	else
-    	    exec tmux new-session -s home
+    	 exec tmux new-session -s home
     	end
   end
 end
@@ -100,7 +101,6 @@ fzf --fish | source
 # Prompt manager
 starship init fish | source
 
-
 # pyenv: use function since it it slow at starup
 status is-login; and pyenv init --path | source
 pyenv init - --no-rehash | source
@@ -114,7 +114,5 @@ function amz
 	set -e AWS_ACCESS_KEY_ID
 	set -e AWS_SECRET_ACCESS_KEY
 end
-
-
 # --- Shell Props ------------------------------------------------------
 set fish_greeting
