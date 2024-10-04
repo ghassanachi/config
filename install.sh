@@ -7,6 +7,10 @@ ln -s $HOME/dev/config/nvim/ $HOME/.config/nvim
 # Make cache directory
 mkdir $HOME/.vimdid 2> /dev/null
 
+rm $HOME/.bin 2> /dev/null
+ln -s $HOME/dev/config/bin  $HOME/.bin
+
+
 # Fish Config
 rm $HOME/.config/fish 2> /dev/null
 ln -s $HOME/dev/config/fish/ $HOME/.config/fish
@@ -29,6 +33,9 @@ ln -s $HOME/dev/config/skhd/ $HOME/.config/skhd
 
 # profile
 ln -sf $HOME/dev/config/profile/profile $HOME/.profile
+
+rm $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc 2> /dev/null
+cp $HOME/dev/config/obsidian/.obsidian.vimrc $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc
 
 # Tmux Conf and Local
 ln -sf $HOME/dev/config/tmux/tmux.conf $HOME/.tmux.conf
