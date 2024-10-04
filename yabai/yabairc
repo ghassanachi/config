@@ -65,7 +65,7 @@ yabai -m config --space 1 layout stack
 
 # show digital colour meter topmost and on all spaces
 
-yabai -m rule --add app="^System Preferences$"	manage=off 
+yabai -m rule --add app="^System Preferences$"	manage=off
 yabai -m rule --add app="^iStat Menus"		    manage=off
 yabai -m rule --add app="^Stickies$"		    manage=off
 
@@ -91,7 +91,6 @@ yabai -m rule --add app="DataGrip"              space=^4
 yabai -m rule --add app="RedisInsight-v2"       space=^4
 yabai -m rule --add app="Clean My Mac"          space=^4
 yabai -m rule --add app="Docker"		        space=^4
-yabai -m rule --add app="Transmission"		    space=^4
 yabai -m rule --add app="Todoist"		        space=^4
 yabai -m rule --add app="Bitwarden"		        space=^4
 yabai -m rule --add app="Slack"		            space=^4
@@ -101,6 +100,7 @@ yabai -m rule --add app="WhatsApp"              space=^5
 yabai -m rule --add app="Spotify"		        space=^5
 yabai -m rule --add app="IINA"			        space=^5
 yabai -m rule --add app="Flow"			        space=^5
+yabai -m rule --add app="Transmission"		    space=^5
 
 # Floating
 yabai -m rule --add app="^System Preferences$"	space=^6
