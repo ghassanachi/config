@@ -1,7 +1,7 @@
 # --- Abbreviations ------------------------------------------------
 
 # General
-alias ls 'lsd'
+alias ls 'eza'
 alias unset 'set --erase'
 abbr -a rm "trash"
 abbr -a cat "bat"
@@ -55,12 +55,6 @@ set -U fish_user_paths $HOME/.bin $fish_user_paths
 set -U fish_user_paths $HOME/.cargo/bin $fish_user_paths
 set -U fish_user_paths $HOME/.cargo-target/release $fish_user_paths
 
-set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
-set -Ux CARGO_INCREMENTAL 1
-set -Ux RUSTFLAGS "-C target-cpu=native"
-set -Ux RUST_BACKTRACE 1
-
-
 # Deno
 set -Ux DENO_INSTALL $HOME/.deno
 set -U fish_user_paths $DENO_INSTALL/bin $fish_user_paths
@@ -74,16 +68,14 @@ set -Ux BUN_INSTALL $HOME/.bun
 set -x fish_user_paths $BUN_INSTALL/bin $fish_user_paths
 
 
-# --- Tmux launcher --------------------------------------------------
+ # --- Tmux launcher --------------------------------------------------
 
-if status --is-interactive
-	if not set -q TMUX
-    	if tmux has-session -t home
-	   	 exec tmux attach-session -t home
-    	else
-    	 exec tmux new-session -s home
-    	end
-  end
+if status --is-interactive; and not set -q TMUX;
+    if tmux has-session -t home
+        exec tmux attach-session -t home
+    else
+        exec tmux new-session -s home
+    end
 end
 
 # --- Shell Hooks ----------------------------------------------------
@@ -100,10 +92,6 @@ fzf --fish | source
 
 # Prompt manager
 starship init fish | source
-
-# pyenv: use function since it it slow at starup
-status is-login; and pyenv init --path | source
-pyenv init - --no-rehash | source
 
 # --- Functions ------------------------------------------------------
 

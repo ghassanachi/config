@@ -18,12 +18,12 @@ set -Ux LDFLAGS "-L/usr/local/opt/libffi/lib"
 set -Ux PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
 # Rust local
-set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
+# set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
 
 ## Rust stuff
 set -Ux CARGO_INCREMENTAL 1
-set -Ux RUSTFLAGS "-C target-cpu=native"
 set -Ux RUST_BACKTRACE 1
+# set -Ux RUSTFLAGS "-C target-cpu=native"
 
 # colored man output
 # from http://linuxtidbits.wordpress.com/2009/03/23/less-colors-for-man-pages/
@@ -36,3 +36,5 @@ set -Ux LESS_TERMCAP_ue \e'[0m'           # end underline
 set -Ux LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
 
 . "$HOME/.cargo/env"
+
+. "$HOME/.local/bin/env"

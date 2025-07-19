@@ -10,7 +10,6 @@ mkdir $HOME/.vimdid 2> /dev/null
 rm $HOME/.bin 2> /dev/null
 ln -s $HOME/dev/config/bin  $HOME/.bin
 
-
 # Fish Config
 rm $HOME/.config/fish 2> /dev/null
 ln -s $HOME/dev/config/fish/ $HOME/.config/fish
