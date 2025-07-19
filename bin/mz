@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Open all packages and apps + plus the root directory in zed
+zed $(fd . -t d -d 1 --search-path ./apps --search-path ./packages) .
+

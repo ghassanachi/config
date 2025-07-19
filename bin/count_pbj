@@ -17,7 +17,11 @@ jq -cR 'split(",")' "$FILE" | jq -csf $HOME/.bin/csvtojson.jq | jq -r --arg jobT
     name: .[0].fullName,
     hours: (map(select(.jobTitleCode == ($jobTitleCode | tonumber)) | .hours | tonumber) | add | if . != null then (. * 100 | round / 100) else 0 end)
   }) |
-  map(select(.hours != null and .hours > 0)) |
-  .[] | "=>  \(.name) - \(.employeeId): \(.hours)"
+  map(select(.hours != null and .hours > 0)) as $employees |
+  ($employees[] | "=>  \(.name) - \(.employeeId): \(.hours)")
+' && \
+jq -cR 'split(",")' "$FILE" | jq -csf $HOME/.bin/csvtojson.jq | jq -r --arg jobTitleCode "$JOBTITLECODE" '
+  map(select(.jobTitleCode == ($jobTitleCode | tonumber)) | .hours | tonumber) |
+  add as $total |
+  "Total Hours: \($total * 100 | round / 100)"
 '
-
