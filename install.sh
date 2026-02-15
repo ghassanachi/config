@@ -51,6 +51,9 @@ ln -sf $HOME/dev/config/jetbrains/.ideavimrc $HOME/.ideavimrc
 rm $HOME/.config/sketchybar 2> /dev/null
 ln -s $HOME/dev/config/sketchybar/ $HOME/.config/sketchybar
 
+# agentic
+ln -s $HOME/dev/config/agentic/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
+
 
 echo ""
 echo "Config Files Linked"
