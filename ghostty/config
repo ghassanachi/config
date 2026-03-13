@@ -1,0 +1,37 @@
+# Theme
+# "Gruvbox Dark Hard" uses the hard dark background (#1d2021).
+# Run `ghostty +list-themes` to preview alternatives like "Gruvbox Dark" (softer).
+theme = "Gruvbox Dark"
+
+# Font
+font-family = "FiraCode Nerd Font"
+font-size = 14
+adjust-cell-height = 2
+
+# Cursor
+cursor-style = block
+cursor-color = d5c4a1
+cursor-text = 1d2021
+
+# Window
+window-width = 140
+window-height = 38
+window-padding-x = 8
+window-padding-y = 16
+macos-titlebar-style = hidden
+confirm-close-surface = false
+
+
+# Bold text uses bright colors
+bold-is-bright = true
+
+# Extended palette overrides (indices 16–21)
+palette = 16=#fe8019
+palette = 17=#d65d0e
+palette = 18=#3c3836
+palette = 19=#504945
+palette = 20=#bdae93
+palette = 21=#ebdbb2
+
+# URL / link handling
+link-url = true
