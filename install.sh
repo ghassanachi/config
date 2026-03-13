@@ -30,11 +30,16 @@ ln -s $HOME/dev/config/yabai/ $HOME/.config/yabai
 rm $HOME/.config/skhd 2> /dev/null
 ln -s $HOME/dev/config/skhd/ $HOME/.config/skhd
 
+#  aerospace
+rm $HOME/.config/aerospace 2> /dev/null
+ln -s $HOME/dev/config/aerospace $HOME/.config/aerospace
+
 # profile
 ln -sf $HOME/dev/config/profile/profile $HOME/.profile
 
-rm $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc 2> /dev/null
-cp $HOME/dev/config/obsidian/.obsidian.vimrc $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc
+# Obsidian
+# rm $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc 2> /dev/null
+# cp $HOME/dev/config/obsidian/.obsidian.vimrc $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc
 
 # Tmux Conf and Local
 ln -sf $HOME/dev/config/tmux/tmux.conf $HOME/.tmux.conf
@@ -43,6 +48,10 @@ ln -sf "$HOME/dev/config/tmux/tmux.conf.local" "$HOME/.tmux.conf.local"
 # Alacritty Conf
 rm $HOME/.config/alacritty 2> /dev/null
 ln -s $HOME/dev/config/alacritty/ $HOME/.config/alacritty
+
+# Ghostty Conf
+rm $HOME/.config/ghostty 2> /dev/null
+ln -s $HOME/dev/config/ghostty $HOME/.config/ghostty
 
 # Jetbrains idea config
 ln -sf $HOME/dev/config/jetbrains/.ideavimrc $HOME/.ideavimrc
