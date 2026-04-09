@@ -25,6 +25,8 @@ abbr -a gc  'git commit -m'
 abbr -a gca 'git commit --amend -m'
 abbr -a gco 'git checkout'
 abbr -a gs  'git status'
+abbr -a gsubi 'git submodule update --init --recursive'
+abbr -a gsubu 'git submodule update --remote -- library'
 
 # Push
 abbr -a gp  'git push'
@@ -46,11 +48,17 @@ abbr -a vimdiff 'nvim -d'
 
 # --- Path Overide ---------------------------------------------------
 
+eval (/opt/homebrew/bin/brew shellenv)
+
 set -U fish_user_paths /opt/local/bin $fish_user_paths
 set -U fish_user_paths /usr/local/sbin $fish_user_paths
 set -U fish_user_paths /usr/local/bin $fish_user_paths
 set -U fish_user_paths $HOME/.bin $fish_user_paths
 set -U fish_user_paths $HOME/.local/bin $fish_user_paths # uv
+set -U fish_user_paths (brew --prefix llvm)/bin $fish_user_paths # llvm utils
+
+# Postgres Cli
+set -U fish_user_paths /opt/homebrew/opt/libpq/bin $fish_user_paths
 
 # Rust
 set -U fish_user_paths $HOME/.cargo/bin $fish_user_paths
@@ -64,7 +72,7 @@ set -U fish_user_paths /Library/TeX/texbin/ $fish_user_paths
 # Rust
 set -Ux CARGO_INCREMENTAL 1
 set -Ux RUST_BACKTRACE 1
-set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
+# set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
 # set -Ux RUSTFLAGS "-C target-cpu=native"
 
 # Deno
@@ -99,12 +107,12 @@ set -Ux LESS_TERMCAP_us \e'[04;38;5;146m' # begin underline
 
 # --- Tmux launcher --------------------------------------------------
 
-if status --is-interactive; and not set -q TMUX;
-    if tmux has-session -t home
-        exec tmux attach-session -t home
-    else
-        exec tmux new-session -s home
-    end
+if status --is-interactive; and not set -q TMUX; and isatty stdout
+     if tmux has-session -t home
+         exec tmux attach-session -t home
+      else
+         exec tmux new-session -s home
+     end
 end
 
 # --- Shell Hooks ----------------------------------------------------
@@ -131,7 +139,9 @@ function amz
 	set -e AWS_ACCESS_KEY_ID
 	set -e AWS_SECRET_ACCESS_KEY
 end
+
 # --- Shell Props ------------------------------------------------------
 set fish_greeting
+set -g fish_key_bindings fish_vi_key_bindings
 
 
