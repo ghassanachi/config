@@ -10,7 +10,7 @@ config-version = 2
 after-startup-command = []
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -45,7 +45,7 @@ automatically-unhide-macos-hidden-apps = false
 # even when they are invisible.
 # This config version is only available since 'config-version = 2'
 # Fallback value (if you omit the key): persistent-workspaces = []
-persistent-workspaces = ["web", "term", "code", "tools", "comm", "wiki"]
+persistent-workspaces = ["web", "term", "code", "tools", "comm", "wiki", "claude", "empty"]
 
 # A callback that runs every time binding mode changes
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -68,10 +68,10 @@ on-mode-changed = []
 [gaps]
     inner.horizontal = 4
     inner.vertical =   4
-    outer.left =       4
-    outer.bottom =     4
-    outer.top =        4
-    outer.right =      4
+    outer.left =       0
+    outer.bottom =     0
+    outer.top =        0
+    outer.right =      0
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -107,8 +107,8 @@ on-mode-changed = []
     #     '''
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-    alt-slash = 'layout tiles horizontal vertical'
-    alt-comma = 'layout accordion horizontal vertical'
+    alt-cmd-ctrl-slash = 'layout tiles horizontal vertical'
+    alt-cmd-ctrl-comma = 'layout accordion horizontal vertical'
     alt-cmd-ctrl-space = "layout accordion tiles horizontal"
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
@@ -134,6 +134,8 @@ on-mode-changed = []
     alt-cmd-ctrl-4 = 'workspace tools'
     alt-cmd-ctrl-5 = 'workspace comm'
     alt-cmd-ctrl-6 = 'workspace wiki'
+    alt-cmd-ctrl-7 = 'workspace claude'
+    alt-cmd-ctrl-0 = 'workspace empty'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-cmd-ctrl-shift-1 = 'move-node-to-workspace web'
@@ -142,6 +144,8 @@ on-mode-changed = []
     alt-cmd-ctrl-shift-4 = 'move-node-to-workspace tools'
     alt-cmd-ctrl-shift-5 = 'move-node-to-workspace comm'
     alt-cmd-ctrl-shift-6 = 'move-node-to-workspace wiki'
+    alt-cmd-ctrl-shift-7 = 'move-node-to-workspace claude'
+
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-cmd-ctrl-t = 'workspace-back-and-forth'
@@ -158,6 +162,10 @@ on-mode-changed = []
 [[on-window-detected]]
     if.app-id = 'com.mitchellh.ghostty'
     run = 'move-node-to-workspace term'
+
+[[on-window-detected]]
+    if.app-id = 'dev.zed.Zed'
+    run = 'move-node-to-workspace code'
 
 [[on-window-detected]]
     if.app-id = 'com.microsoft.VSCode'
@@ -177,6 +185,10 @@ on-mode-changed = []
 
 [[on-window-detected]]
     if.app-id = 'notion.id'
+    run = 'move-node-to-workspace wiki'
+
+[[on-window-detected]]
+    if.app-id = 'com.anthropic.claudefordesktop'
     run = 'move-node-to-workspace wiki'
 
 # 'service' binding mode declaration.

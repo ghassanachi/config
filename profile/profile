@@ -14,7 +14,7 @@ set -Ux LDFLAGS "-L/usr/local/opt/libffi/lib"
 set -Ux PKG_CONFIG_PATH "/usr/local/opt/libffi/lib/pkgconfig"
 
 ## Rust stuff
-set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
+# set -Ux CARGO_TARGET_DIR $HOME/.cargo-target
 set -Ux CARGO_INCREMENTAL 1
 set -Ux RUST_BACKTRACE 1
 # set -Ux RUSTFLAGS "-C target-cpu=native"

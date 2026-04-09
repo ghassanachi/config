@@ -39,6 +39,9 @@ return {
             },
         })
 
+        vim.lsp.enable('oxfmt')
+        vim.lsp.enable('oxlint')
+
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
@@ -47,6 +50,8 @@ return {
                 "rust_analyzer",
                 "gopls",
                 "ts_ls",
+                "oxlint",
+                "oxfmt",
             },
         })
 
