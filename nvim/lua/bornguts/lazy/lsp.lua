@@ -3,6 +3,7 @@ return {
     dependencies = {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -39,9 +40,6 @@ return {
             },
         })
 
-        vim.lsp.enable('oxfmt')
-        vim.lsp.enable('oxlint')
-
         require("fidget").setup({})
         require("mason").setup()
         require("mason-lspconfig").setup({
@@ -50,8 +48,18 @@ return {
                 "rust_analyzer",
                 "gopls",
                 "ts_ls",
-                "oxlint",
+            },
+        })
+        -- Non-LSP tools (formatters/linters) — mason-lspconfig only handles
+        -- servers, so CLI tooling used by conform.nvim is installed here.
+        require("mason-tool-installer").setup({
+            ensure_installed = {
                 "oxfmt",
+                "oxlint",
+                "ruff",
+                "stylua",
+                "shfmt",
+                "jq",
             },
         })
 
