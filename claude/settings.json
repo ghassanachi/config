@@ -2,7 +2,18 @@
   "env": {
     "ENABLE_LSP_TOOL": "1"
   },
-  "model": "opus",
+  "model": "opus[1m]",
+  "effortLevel": "medium",
+  "skipAutoPermissionPrompt": true,
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "anthropic-agent-skills": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/skills"
+    }
+  },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
