@@ -89,6 +89,12 @@ binding = { key = "U", mods = "Control|Shift" }
 regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`\\\\]+"
 
 [[keyboard.bindings]]
+# Send CSI u sequence for Shift+Enter so apps (like Claude Code) can distinguish it from Enter
+chars = "\u001b[13;2u"
+key = "Return"
+mods = "Shift"
+
+[[keyboard.bindings]]
 action = "IncreaseFontSize"
 key = "Equals"
 mods = "Command"
