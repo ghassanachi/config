@@ -18,7 +18,26 @@ return {
         -- Define your formatters
         formatters_by_ft = {
             lua = { "stylua" },
-            python = { "isort", "black" },
+            -- Ruff replaces isort + black + (some) flake8 rules. Order matters:
+            -- fixes/imports rewrite code, format does the final whitespace pass.
+            python = { "ruff_fix", "ruff_organize_imports", "ruff_format" },
+            -- oxfmt is a Prettier-compatible formatter from the oxc project.
+            javascript = { "oxfmt" },
+            javascriptreact = { "oxfmt" },
+            typescript = { "oxfmt" },
+            typescriptreact = { "oxfmt" },
+            json = { "oxfmt" },
+            jsonc = { "oxfmt" },
+            json5 = { "oxfmt" },
+            yaml = { "oxfmt" },
+            toml = { "oxfmt" },
+            css = { "oxfmt" },
+            scss = { "oxfmt" },
+            less = { "oxfmt" },
+            html = { "oxfmt" },
+            vue = { "oxfmt" },
+            markdown = { "oxfmt" },
+            graphql = { "oxfmt" },
         },
         -- Set up format-on-save
         format_on_save = { timeout_ms = 500, lsp_fallback = true },
