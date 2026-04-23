@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Resolve the newest ECR tag (optionally matching a prefix) and run
+# `make deploy-cloud` against it.
+#
+# Usage:
+#   qdeploy [-s|--skip-build] [prefix]
+#
+# Options:
+#   -s, --skip-build   Pass CLOUD_SKIP_BUILD=1 to make (reuse the existing build).
+#
+# Environment:
+#   TENANT      tenant name (default: ghassanachi)
+#   CC          cross-compiler (default: /opt/homebrew/bin/x86_64-unknown-linux-gnu-gcc)
+#   ECR_REPO    repo to pull tags from (default: the teleport-ent-distroless staging repo)
+
+set -euo pipefail
+
+TENANT="${TENANT:-ghassanachi}"
+CC="${CC:-/opt/homebrew/bin/x86_64-unknown-linux-gnu-gcc}"
+export ECR_REPO="${ECR_REPO:-public.ecr.aws/gravitational-staging/teleport-ent-distroless}"
+
+SKIP_BUILD=0
+PREFIX=""
+
+while (( $# )); do
+    case "$1" in
+        -s|--skip-build) SKIP_BUILD=1; shift ;;
+        -h|--help) sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        --) shift; PREFIX="${1:-}"; break ;;
+        -*) echo "error: unknown option: $1" >&2; exit 2 ;;
+        *) PREFIX="$1"; shift ;;
+    esac
+done
+
+if [[ -n "$PREFIX" ]]; then
+    TAG=$(ecr-tags "$PREFIX" -n 1)
+else
+    TAG=$(ecr-tags -n 1)
+fi
+
+if [[ -z "$TAG" ]]; then
+    echo "error: no tags found in $ECR_REPO${PREFIX:+ matching \"$PREFIX\"}" >&2
+    exit 1
+fi
+
+make_args=(
+    CC="$CC"
+    TENANT="$TENANT"
+    BASE_IMAGE_REPO="$ECR_REPO"
+    BASE_IMAGE_TAG="$TAG"
+)
+if (( SKIP_BUILD )); then
+    make_args+=(CLOUD_SKIP_BUILD=1)
+fi
+make_args+=(deploy-cloud)
+
+echo "-> resolved ${ECR_REPO}:${TAG} (tenant=${TENANT})"
+echo
+echo "Will run:"
+printf '  make \\\n'
+for arg in "${make_args[@]}"; do
+    printf '      %s \\\n' "$arg"
+done | sed '$ s/ \\$//'
+echo
+
+read -r -p "Proceed? [y/N] " reply
+case "$reply" in
+    y|Y|yes|YES) ;;
+    *) echo "aborted."; exit 1 ;;
+esac
+
+exec make "${make_args[@]}"
