@@ -45,6 +45,7 @@ abbr -a grs 'git rebase --skip'
 # Utils
 abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
 abbr -a vimdiff 'nvim -d'
+abbr -a x509 'openssl x509 -text -noout'
 
 # --- Path Overide ---------------------------------------------------
 
