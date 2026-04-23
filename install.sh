@@ -69,6 +69,7 @@ ln -s $CONFIG_DIR/sketchybar/ $HOME/.config/sketchybar
 # Claude Code
 ln -sf $CONFIG_DIR/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
 ln -sf $CONFIG_DIR/claude/keybindings.json $HOME/.claude/keybindings.json
+ln -sf $CONFIG_DIR/claude/settings.json $HOME/.claude/settings.json
 
 # sqlite3
 rm $HOME/.config/sqlite3 2> /dev/null

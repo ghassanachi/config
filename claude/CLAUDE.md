@@ -1,3 +1,10 @@
+## LSP navigation
+
+When working on a codebase with a supported LSP plugin (Go, Rust,
+TypeScript), prefer the LSP tool for code navigation: jump to
+definitions, find references, and surface type errors. Fall back to
+grep/file-reading only when LSP is unavailable or returns an error.
+
 ## General best practices
 
 - Run shell scripts through shellcheck.
