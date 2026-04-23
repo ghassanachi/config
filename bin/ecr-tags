@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# List the latest tags from a public.ecr.aws repository, sorted newest-first.
+# Inspired by resolve_dev_base_image_for_master in teleport/e/scripts/deploy-helper.sh.
+#
+# Usage:
+#   ecr-tags [prefix] [-n count] [-r repo]
+#
+# Examples:
+#   ecr-tags                          # 10 latest tags from the default repo
+#   ecr-tags 19.0.0-dev-nightly       # filter by prefix
+#   ecr-tags 19.0.0 -n 25             # top 25 matching "19.0.0"
+#   ecr-tags -r public.ecr.aws/foo/bar 1.2
+
+set -euo pipefail
+
+REPO="${ECR_REPO:-public.ecr.aws/gravitational-staging/teleport-ent-distroless}"
+COUNT=10
+PREFIX=""
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [prefix] [-n count] [-r repo]
+
+List the latest tags from a public.ecr.aws repository, sorted by version.
+
+Options:
+  -n COUNT   Number of tags to return (default: 10)
+  -r REPO    Full repo path (default: \$ECR_REPO or
+             public.ecr.aws/gravitational-staging/teleport-ent-distroless)
+  -h         Show this help
+EOF
+}
+
+while (( $# )); do
+    case "$1" in
+        -n) COUNT="$2"; shift 2 ;;
+        -r) REPO="$2"; shift 2 ;;
+        -h|--help) usage; exit 0 ;;
+        --) shift; PREFIX="${1:-}"; break ;;
+        -*) echo "error: unknown option: $1" >&2; usage >&2; exit 2 ;;
+        *) PREFIX="$1"; shift ;;
+    esac
+done
+
+if [[ "$REPO" != public.ecr.aws/* ]]; then
+    echo "error: repo must start with public.ecr.aws/ (got: $REPO)" >&2
+    exit 2
+fi
+
+repo_path="${REPO#public.ecr.aws/}"
+registry_alias="${repo_path%%/*}"
+repository_name="${repo_path#*/}"
+
+token=$(curl -fsS 'https://public.ecr.aws/token/' | jq -r '.token // empty')
+if [[ -z "$token" ]]; then
+    echo "error: could not retrieve token from public.ecr.aws" >&2
+    exit 1
+fi
+
+curl -fsS -H "Authorization: Bearer $token" \
+    "https://public.ecr.aws/v2/${registry_alias}/${repository_name}/tags/list" \
+  | jq -r --arg prefix "$PREFIX" '
+      .tags[]?
+      | select($prefix == "" or startswith($prefix))
+      | select(test("\\.(sig|att)$") | not)
+    ' \
+  | sort -rV \
+  | awk -v n="$COUNT" 'NR<=n'
