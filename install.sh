@@ -60,8 +60,9 @@ ln -sf $HOME/developer/config/jetbrains/.ideavimrc $HOME/.ideavimrc
 rm $HOME/.config/sketchybar 2> /dev/null
 ln -s $HOME/developer/config/sketchybar/ $HOME/.config/sketchybar
 
-# agentic
-ln -s $HOME/developer/config/agentic/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
+# Claude Code
+ln -sf $HOME/dev/config/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
+ln -sf $HOME/dev/config/claude/keybindings.json $HOME/.claude/keybindings.json
 
 
 echo ""
