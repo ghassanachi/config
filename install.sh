@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEFAULT_CONFIG_DIR="$HOME/dev/config"
+DEFAULT_CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 read -p "Config directory [$DEFAULT_CONFIG_DIR]: " CONFIG_DIR
 CONFIG_DIR="${CONFIG_DIR:-$DEFAULT_CONFIG_DIR}"
 echo "Using config directory: $CONFIG_DIR"
