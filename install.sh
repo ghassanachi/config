@@ -70,6 +70,10 @@ ln -s $CONFIG_DIR/sketchybar/ $HOME/.config/sketchybar
 ln -sf $CONFIG_DIR/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
 ln -sf $CONFIG_DIR/claude/keybindings.json $HOME/.claude/keybindings.json
 
+# sqlite3
+rm $HOME/.config/sqlite3 2> /dev/null
+ln -s $CONFIG_DIR/sqlite/ $HOME/.config/sqlite3
+
 
 echo ""
 echo "Config Files Linked"
