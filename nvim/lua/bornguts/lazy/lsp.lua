@@ -24,6 +24,44 @@ return {
             cmp_lsp.default_capabilities()
         )
 
+        vim.lsp.config('gopls', {
+            settings = {
+                gopls = {
+                    -- Enables `source.organizeImports` as a code action,
+                    -- which the autocmd below runs on save.
+                    ["local"] = "",
+                    gofumpt = true,
+                    staticcheck = true,
+                },
+            },
+        })
+
+        -- LSP servers that support `source.organizeImports` expose it as
+        -- a code action and rely on the client to invoke it; nothing
+        -- happens on save by default. We run it synchronously before
+        -- write so the saved buffer already has imports tidied. Python
+        -- is handled by conform.nvim (ruff_organize_imports), and
+        -- rust-analyzer doesn't expose this action — so the relevant
+        -- filetypes here are Go, TypeScript/JavaScript.
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            pattern = {
+                "*.go",
+                "*.ts", "*.tsx", "*.js", "*.jsx", "*.mts", "*.cts",
+            },
+            callback = function()
+                local params = vim.lsp.util.make_range_params(0, "utf-8")
+                params.context = { only = { "source.organizeImports" } }
+                local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
+                for _, res in pairs(result or {}) do
+                    for _, action in pairs(res.result or {}) do
+                        if action.edit then
+                            vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+                        end
+                    end
+                end
+            end,
+        })
+
         vim.lsp.config('lua_ls', {
             settings = {
                 Lua = {
