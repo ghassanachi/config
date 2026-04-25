@@ -1,0 +1,11 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[user]
+name = "Ghassan Gedeon Achi"
+email = "ghassan.achi@goteleport.com"
+
+[ui]
+# jj's builtin TUI diff editor. `nvim -d` is awkward here because jj
+# passes two directories and nvim opens netrw on each side instead of
+# diffing. The builtin editor handles multi-file squashes cleanly.
+diff-editor = ":builtin"

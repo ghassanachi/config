@@ -71,6 +71,10 @@ ln -sf $CONFIG_DIR/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
 ln -sf $CONFIG_DIR/claude/keybindings.json $HOME/.claude/keybindings.json
 ln -sf $CONFIG_DIR/claude/settings.json $HOME/.claude/settings.json
 
+# jj — symlink only config.toml; $HOME/.config/jj/repos holds per-repo state
+mkdir -p $HOME/.config/jj
+ln -sf $CONFIG_DIR/jj/config.toml $HOME/.config/jj/config.toml
+
 # sqlite3
 rm $HOME/.config/sqlite3 2> /dev/null
 ln -s $CONFIG_DIR/sqlite/ $HOME/.config/sqlite3
