@@ -71,6 +71,15 @@ ln -sf $CONFIG_DIR/claude/CLAUDE.md $HOME/.claude/CLAUDE.md
 ln -sf $CONFIG_DIR/claude/keybindings.json $HOME/.claude/keybindings.json
 ln -sf $CONFIG_DIR/claude/settings.json $HOME/.claude/settings.json
 
+# Claude Code skills — symlink each skill from agentic/skills into ~/.claude/skills
+mkdir -p $HOME/.claude/skills
+for skill_dir in "$CONFIG_DIR"/agentic/skills/*/; do
+    [ -d "$skill_dir" ] || continue
+    skill_name=$(basename "$skill_dir")
+    rm -rf "$HOME/.claude/skills/$skill_name" 2> /dev/null
+    ln -sf "${skill_dir%/}" "$HOME/.claude/skills/$skill_name"
+done
+
 # jj — symlink only config.toml; $HOME/.config/jj/repos holds per-repo state
 mkdir -p $HOME/.config/jj
 ln -sf $CONFIG_DIR/jj/config.toml $HOME/.config/jj/config.toml
