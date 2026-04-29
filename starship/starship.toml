@@ -51,3 +51,6 @@ style = "#a89984"
 [python]
 format = "[$virtualenv]($style) "
 style = "#a89984"
+
+[jujutsu]
+disabled = false
