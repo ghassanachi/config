@@ -3,9 +3,8 @@ $time\
 $username\
 $hostname\
 $directory\
-$git_branch\
+${custom.jj}\
 $git_state\
-$git_status\
 $cmd_duration\
 $line_break\
 $python\
@@ -19,20 +18,18 @@ success_symbol = "[|](#fb4934)"
 error_symbol = "[|](#fb4934 bold)"
 vimcmd_symbol = "[|](#b8bb26)"
 
+
+[custom.jj]
+disabled = false
+when = "jj-starship detect"
+shell = ["jj-starship"]
+format = "$output "
+
 [git_branch]
-format = "[$branch]($style) "
-style = "#b8bb26"
+disabled = true
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](#d3869b) ($ahead_behind$stashed)]($style)"
-style = "#8ec07c"
-conflicted = "​"
-untracked = "​"
-modified = "​"
-staged = "​"
-renamed = "​"
-deleted = "​"
-stashed = "≡"
+disabled = true
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
@@ -52,5 +49,3 @@ style = "#a89984"
 format = "[$virtualenv]($style) "
 style = "#a89984"
 
-[jujutsu]
-disabled = false
