@@ -5,6 +5,7 @@ name = "Ghassan Gedeon Achi"
 email = "ghassan.achi@goteleport.com"
 
 [ui]
+editor = ["nvim", "-c", "setfiletype gitcommit"]
 # jj's builtin TUI diff editor. `nvim -d` is awkward here because jj
 # passes two directories and nvim opens netrw on each side instead of
 # diffing. The builtin editor handles multi-file squashes cleanly.

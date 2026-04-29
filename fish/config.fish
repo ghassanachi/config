@@ -88,11 +88,13 @@ set -x fish_user_paths $GOPATH/bin $fish_user_paths
 set -Ux BUN_INSTALL $HOME/.bun
 set -x fish_user_paths $BUN_INSTALL/bin $fish_user_paths
 
+# GPG Suite
+set -gx GPG_TTY (tty)
+
 # General
 set -Ux VISUAL nvim
 set -Ux EDITOR nvim
 
-# uv
 
 # --- General Setup --------------------------------------------------
 
