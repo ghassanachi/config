@@ -17,7 +17,7 @@ abbr -a tn  'tmux new -s'
 # This is a bit janky but muscle memory is hard
 # abbr -a yarn 'npm run'
 
-# Git
+# --- Git Abbr -------------------------------------------------------
 abbr -a gco 'git'
 abbr -a gb  'git branch'
 abbr -a ga  'git add -p'
@@ -88,8 +88,12 @@ set -x fish_user_paths $GOPATH/bin $fish_user_paths
 set -Ux BUN_INSTALL $HOME/.bun
 set -x fish_user_paths $BUN_INSTALL/bin $fish_user_paths
 
+# Elan
+set -x fish_user_paths $HOME/.elan/bin $fish_user_paths
+
 # GPG Suite
 set -gx GPG_TTY (tty)
+
 
 # General
 set -Ux VISUAL nvim
@@ -120,8 +124,10 @@ end
 
 # --- Shell Hooks ----------------------------------------------------
 
-eval (direnv hook fish)
+# Direnv
+direnv hook fish | source
 
+# Zoxide
 zoxide init --cmd j fish | source
 
 # Nvm for fish
@@ -132,6 +138,11 @@ fzf --fish | source
 
 # Prompt manager
 starship init fish | source
+
+# --- Completions ----------------------------------------------------
+
+# JJ
+jj util completion fish | source
 
 # --- Functions ------------------------------------------------------
 
