@@ -44,7 +44,19 @@ Create `./tmp/<session_id>/PR.md` in this shape:
 - <bullet>
 
 ## Why
-<context, motivation, linked issues/RFDs>
+<Macro-level motivation: the broader problem this PR addresses and how
+it relates to the linked issue/RFD. Not a recap of "what changed" — a
+reviewer should come away understanding why this work matters at the
+project/product level, not just the mechanics of the diff.>
+
+<Issue reference — chosen with the user in Phase 3. Use one of:
+  Closes #<issue>      — this PR fully resolves the issue
+  Fixes #<issue>       — same as Closes; pick whichever the user prefers
+  Relates to #<issue>  — partial progress, or context-only link
+Omit entirely if no issue applies.>
+
+Depends on #<pr>
+<!-- Omit unless this PR cannot land before another. Less important within a stack where ordering is implicit. -->
 
 Changelog: <one-line user-facing description>
 <!-- If no-changelog: omit this line and note the label under Submission notes below. -->
@@ -76,8 +88,14 @@ Everything above the `---` separator is the PR body that will be submitted; ever
 Work through these with the user, one at a time, with explicit checkpoints:
 
 1. **Title** — propose a human-readable title (not just the commit subject). Confirm.
-2. **Summary / What changed / Why** — draft from context.md + the diff. User edits. Iterate until they sign off.
-3. **Changelog line** (or `no-changelog` decision) — confirm the exact wording; it's user-facing release-notes copy.
+2. **Linked issue** — always include a GitHub issue reference when one applies. Check `context.md`, the branch name, and recent commit messages for a candidate issue. If none is obvious but the work plausibly maps to one, ask the user before omitting it. Do **not** assume `Closes` — whether a PR closes the issue vs. only relates to it is the user's call. Propose a reference and ask which form to use:
+   - `Closes #N` / `Fixes #N` — fully resolves the issue
+   - `Relates to #N` — partial progress or context-only link
+   Default to asking rather than guessing; closing an issue prematurely is harder to undo than adding `Closes` later.
+3. **Dependencies** — if this PR can't land before another (API/schema change in another PR, shared refactor, etc.), add a `Depends on #<pr>` line. Less important inside a stack where ordering is implicit, but still call it out if a reviewer would otherwise be confused.
+4. **Summary / What changed / Why** — draft from context.md + the diff. User edits. Iterate until they sign off.
+   - The **Why** section must be macro-level: explain the underlying problem and how this PR relates to the linked issue, not a re-statement of the diff. If you find yourself paraphrasing "What changed", push higher — what is the user/product/system-level reason this work is happening?
+5. **Changelog line** (or `no-changelog` decision) — confirm the exact wording; it's user-facing release-notes copy.
 
 Do not proceed to Phase 4 until the user says the high-level section is good.
 
