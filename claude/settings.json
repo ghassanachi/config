@@ -2,18 +2,10 @@
   "env": {
     "ENABLE_LSP_TOOL": "1"
   },
-  "model": "opus[1m]",
-  "effortLevel": "medium",
-  "skipAutoPermissionPrompt": true,
   "permissions": {
     "defaultMode": "auto"
   },
-  "anthropic-agent-skills": {
-    "source": {
-      "source": "github",
-      "repo": "anthropics/skills"
-    }
-  },
+  "model": "opus[1m]",
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
@@ -23,5 +15,13 @@
     "commit-commands@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "skipAutoPermissionPrompt": true,
+  "anthropic-agent-skills": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/skills"
+    }
   }
 }
