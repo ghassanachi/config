@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+# Run the local equivalents of the Teleport CI lint/up-to-date checks
+# that most often fail PRs. Detects which file types changed (vs.
+# master) and only runs the steps relevant to that change set, so the
+# common case (a Go-only PR) doesn't drag in proto/UI checks.
+#
+# Usage:
+#   pr-check [--all] [--test] [--no-fix] [--base <ref>] [-h]
+#
+# Options:
+#   --all          Ignore change detection; run every step.
+#   --test         Also run `make test-go-unit` and `make test-api`.
+#                  Off by default — these are slow and not the steps
+#                  that typically break CI lint.
+#   --no-fix       Skip `make fix-imports` (only verify, don't mutate).
+#   --base <ref>   Diff against <ref> instead of `master` when deciding
+#                  which steps to run. Useful from a feature branch
+#                  layered on another branch.
+#
+# What it runs (when relevant changes are detected):
+#   Go   : fix-imports, golangci-lint (per module, mirroring the CI
+#          working-directory matrix), lint-test-symbols,
+#          derive-up-to-date, go-generate-up-to-date,
+#          go mod tidy -diff per module, and (with --test)
+#          test-go-unit + test-api.
+#   Proto: protos-up-to-date/host.
+#
+# `golangci-lint` is invoked directly (not via `make lint`) to avoid
+# the buildbox container `make` would shell into. Requires
+# `golangci-lint` on PATH; the script prints both the installed and
+# CI-expected versions for sanity.
+#
+# Exits non-zero if any step fails. A summary table is printed at the
+# end so you can see which step to fix first.
+
+set -uo pipefail
+
+usage() {
+    sed -n '2,34p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+BASE="master"
+RUN_ALL=0
+RUN_TEST=0
+RUN_FIX=1
+
+while (( $# )); do
+    case "$1" in
+        --all) RUN_ALL=1; shift ;;
+        --test) RUN_TEST=1; shift ;;
+        --no-fix) RUN_FIX=0; shift ;;
+        --base) BASE="${2:?--base requires an argument}"; shift 2 ;;
+        -h|--help) usage; exit 0 ;;
+        *) echo "error: unknown argument: $1" >&2; usage >&2; exit 2 ;;
+    esac
+done
+
+# Verify we're inside a git repo and at its root.
+ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    echo "error: not inside a git working tree" >&2
+    exit 1
+}
+cd "$ROOT" || exit 1
+
+# Detect which categories of files changed vs. the base ref. Includes
+# both committed and uncommitted changes — `git diff <base>` compares
+# the working tree to <base>, so anything dirty counts too.
+if (( RUN_ALL )); then
+    HAS_GO=1
+    HAS_PROTO=1
+else
+    if ! git rev-parse --verify --quiet "$BASE" >/dev/null; then
+        echo "error: base ref '$BASE' not found; pass --base <ref>" >&2
+        exit 1
+    fi
+    CHANGED=$(git diff --name-only "$BASE" -- 2>/dev/null)
+    HAS_GO=0
+    HAS_PROTO=0
+    if grep -qE '(\.go$|^go\.(mod|sum)$|^Makefile$|^\.golangci\.yml$)' <<<"$CHANGED"; then
+        HAS_GO=1
+    fi
+    if grep -qE '(^api/proto/|^proto/|\.proto$)' <<<"$CHANGED"; then
+        HAS_PROTO=1
+    fi
+fi
+
+if (( ! HAS_GO && ! HAS_PROTO )); then
+    echo "no Go or proto changes detected vs. $BASE — nothing to do."
+    echo "(use --all to force, or --base <ref> to compare against a different ref)"
+    exit 0
+fi
+
+# Track outcomes for a tidy summary at the end.
+declare -a STEP_NAMES
+declare -a STEP_RESULTS
+FAILED=0
+
+run_step() {
+    local name="$1"; shift
+    printf '\n\033[1m── %s ──\033[0m\n' "$name"
+    printf '  $ %s\n' "$*"
+    if "$@"; then
+        STEP_NAMES+=("$name")
+        STEP_RESULTS+=("PASS")
+    else
+        STEP_NAMES+=("$name")
+        STEP_RESULTS+=("FAIL")
+        FAILED=1
+    fi
+}
+
+# `go mod tidy -diff` is the exact check CI runs. It exits non-zero if
+# any module is untidy, without mutating files.
+# shellcheck disable=SC2329  # invoked via `run_step "..." check_go_mod_tidy`
+check_go_mod_tidy() {
+    local f rc=0
+    while IFS= read -r f; do
+        echo "  checking $f"
+        if ! ( cd "$(dirname "$f")" && go mod tidy -diff ); then
+            rc=1
+        fi
+    done < <(find . -path ./e -prune -o -name go.mod -print)
+    return "$rc"
+}
+
+# Mirrors the per-working-directory `golangci-lint` invocations the CI
+# Lint (Go) job runs. We invoke `golangci-lint` directly rather than
+# `make lint` to avoid the buildbox container that `make` shells into.
+# The root module gets the same `--build-tags` CI passes; everything
+# else takes whatever its local .golangci.yml dictates.
+#
+# Expects `golangci-lint` on PATH. The CI version is whatever
+# `make -C build.assets print-golangci-lint-version` reports; if the
+# locally installed version is older than that, the run will warn.
+# shellcheck disable=SC2329  # invoked via `run_step "..." check_lint`
+check_lint() {
+    if ! command -v golangci-lint >/dev/null; then
+        echo "error: golangci-lint not on PATH (install via 'brew install golangci-lint' or matching CI version)" >&2
+        return 1
+    fi
+
+    local want_version
+    want_version=$(make -s -C build.assets print-golangci-lint-version 2>/dev/null || true)
+    if [[ -n "$want_version" ]]; then
+        local have_version
+        have_version=$(golangci-lint version --short 2>/dev/null || golangci-lint --version 2>/dev/null | awk '{print $4}')
+        echo "  golangci-lint installed=${have_version:-unknown} CI=${want_version}"
+    fi
+
+    # (working-directory, extra-args). Keep this list aligned with
+    # the `golangci-lint` invocations in .github/workflows/lint.yaml.
+    local -a targets=(
+        ".|--build-tags=bpf,libfido2,piv,tpmsimulator"
+        "api|"
+        "assets/backport|"
+        "build.assets/tooling|"
+        "integrations/terraform|"
+        "integrations/event-handler|"
+    )
+
+    local rc=0 spec dir extra
+    for spec in "${targets[@]}"; do
+        dir="${spec%%|*}"
+        extra="${spec#*|}"
+        if [[ ! -d "$dir" ]]; then
+            echo "  skip $dir (not present)"
+            continue
+        fi
+        printf '  → golangci-lint run (%s)%s\n' "$dir" "${extra:+ ${extra}}"
+        # shellcheck disable=SC2086  # we want $extra word-split
+        if ! ( cd "$dir" && GOFLAGS=-buildvcs=false golangci-lint run $extra ); then
+            rc=1
+        fi
+    done
+    return "$rc"
+}
+
+if (( HAS_GO )); then
+    if (( RUN_FIX )); then
+        run_step "fix-imports" make fix-imports
+    fi
+    run_step "golangci-lint (per module)" check_lint
+    run_step "lint-test-symbols" make lint-test-symbols
+    run_step "derive-up-to-date" make derive-up-to-date
+    run_step "go-generate-up-to-date" make go-generate-up-to-date
+    run_step "go mod tidy (verify clean)" check_go_mod_tidy
+    if (( RUN_TEST )); then
+        run_step "test-api" make test-api
+        run_step "test-go-unit" make test-go-unit
+    fi
+fi
+
+if (( HAS_PROTO )); then
+    run_step "protos-up-to-date" make protos-up-to-date/host
+fi
+
+# Summary
+printf '\n\033[1m── Summary ──\033[0m\n'
+for i in "${!STEP_NAMES[@]}"; do
+    if [[ "${STEP_RESULTS[$i]}" == "PASS" ]]; then
+        printf '  \033[32m✓\033[0m %s\n' "${STEP_NAMES[$i]}"
+    else
+        printf '  \033[31m✗\033[0m %s\n' "${STEP_NAMES[$i]}"
+    fi
+done
+
+exit "$FAILED"
