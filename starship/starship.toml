@@ -22,7 +22,7 @@ vimcmd_symbol = "[|](#b8bb26)"
 [custom.jj]
 disabled = false
 when = "jj-starship detect"
-shell = ["jj-starship"]
+shell = ["jj-starship", '--bookmarks-display-limit', '1']
 format = "$output "
 
 [git_branch]
