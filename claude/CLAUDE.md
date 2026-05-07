@@ -85,6 +85,22 @@ code, put them in indented code blocks.
 
 - Use realistic names for types and variables.
 
+### GitHub-bound prose is NOT hard-wrapped
+
+Anything destined for GitHub — PR descriptions, PR comments, issue
+bodies, review replies, anything passed to `gh pr create --body` /
+`gh pr comment` / `gh issue comment` — must NOT be hard-wrapped.
+Write each paragraph as a single long line and let GitHub's renderer
+soft-wrap. Hard-wraps render as awkward mid-sentence breaks in the
+GitHub markdown renderer.
+
+This applies even when the draft lives in a local file (e.g.
+`tmp/pr_comment.md`) before being posted.
+
+Still wrap (unchanged): git commit messages (~72 cols per the Git
+workflow section), code comments, and markdown files committed to a
+repo as docs (follow that repo's style).
+
 ## Code style preferences
 
 Document when you have intentionally omitted code that the reader might
