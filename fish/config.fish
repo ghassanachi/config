@@ -47,6 +47,12 @@ abbr -a gah 'git stash; and git pull --rebase; and git stash pop'
 abbr -a vimdiff 'nvim -d'
 abbr -a x509 'openssl x509 -text -noout'
 
+# Teleport
+alias tsh-e=$HOME/developer/working/teleport/e/build/tsh
+alias teleport-e=$HOME/developer/working/teleport/e/build/teleport
+alias tctl-e=$HOME/developer/working/teleport/e/build/tctl
+alias tbot-e=$HOME/developer/working/teleport/e/build/tbot
+
 # --- Path Overide ---------------------------------------------------
 
 eval (/opt/homebrew/bin/brew shellenv)

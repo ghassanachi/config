@@ -9,9 +9,13 @@
 #   -s, --skip-build   Pass CLOUD_SKIP_BUILD=1 to make (reuse the existing build).
 #
 # Environment:
-#   TENANT      tenant name (default: ghassanachi)
-#   CC          cross-compiler (default: /opt/homebrew/bin/x86_64-unknown-linux-gnu-gcc)
-#   ECR_REPO    repo to pull tags from (default: the teleport-ent-distroless staging repo)
+#   TENANT             tenant name (default: ghassanachi)
+#   CC                 cross-compiler (default: /opt/homebrew/bin/x86_64-unknown-linux-gnu-gcc)
+#   ECR_REPO           repo to pull tags from (default: the teleport-ent-distroless staging repo)
+#   NAMESPACE_PREFIX   override the tenant namespace prefix; trial tenants need
+#                      trial-cloud-gravitational-io (forwarded to make only when set)
+#   KUBE_AUTH_CLUSTER  auth cluster for rollout monitoring, e.g. tc-staging-cs-02-usw2
+#                      (forwarded to make only when set)
 
 set -euo pipefail
 
@@ -49,6 +53,14 @@ make_args=(
     BASE_IMAGE_REPO="$ECR_REPO"
     BASE_IMAGE_TAG="$TAG"
 )
+# Forward namespace/auth-cluster overrides only when set, so an unset value
+# leaves make on its own defaults (cloud-gravitational-io / cs-01-usw2).
+if [[ -n "${NAMESPACE_PREFIX:-}" ]]; then
+    make_args+=(NAMESPACE_PREFIX="$NAMESPACE_PREFIX")
+fi
+if [[ -n "${KUBE_AUTH_CLUSTER:-}" ]]; then
+    make_args+=(KUBE_AUTH_CLUSTER="$KUBE_AUTH_CLUSTER")
+fi
 if (( SKIP_BUILD )); then
     make_args+=(CLOUD_SKIP_BUILD=1)
 fi
