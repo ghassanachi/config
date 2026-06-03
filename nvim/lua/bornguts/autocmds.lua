@@ -49,6 +49,9 @@ autocmd({ "BufWritePre" }, {
 -- reads naturally. Buffer-local `j`/`k` maps move by visual line so navigation
 -- tracks the wrapped display rather than jumping over whole paragraphs, while a
 -- count (e.g. `5j`) still moves by real lines so relative-number jumps work.
+-- We apply the same maps in visual/visual-block mode (`x`) so selecting prose
+-- moves by display line too, keeping selection behaviour consistent with normal
+-- mode.
 autocmd('FileType', {
     group = BornGutsGroup,
     pattern = { 'markdown' },
@@ -57,8 +60,8 @@ autocmd('FileType', {
         vim.opt_local.linebreak = true
 
         local opts = { buffer = e.buf, expr = true }
-        vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", opts)
-        vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", opts)
+        vim.keymap.set({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", opts)
+        vim.keymap.set({ 'n', 'x' }, 'k', "v:count == 0 ? 'gk' : 'k'", opts)
     end,
 })
 
