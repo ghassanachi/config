@@ -5,7 +5,6 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
@@ -14,7 +13,17 @@
     "security-guidance@claude-plugins-official": true,
     "commit-commands@claude-plugins-official": true,
     "gopls-lsp@claude-plugins-official": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "superpowers-extended-cc@superpowers-extended-cc-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-extended-cc-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "pcvelz/superpowers"
+      },
+      "autoUpdate": true
+    }
   },
   "effortLevel": "high",
   "skipAutoPermissionPrompt": true,
@@ -23,5 +32,6 @@
       "source": "github",
       "repo": "anthropics/skills"
     }
-  }
+  },
+  "model": "opus[1m]"
 }

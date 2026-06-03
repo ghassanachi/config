@@ -59,6 +59,17 @@ Before committing, create a temporary example file for each compile-fail
 test and check the output of `cargo run --example <name>` to ensure it
 fails for the correct reason. Remove the temporary example after.
 
+## Go guidelines
+
+### Test structure
+
+- Prefer nested subtests over `Test_<Condition>` naming. Group related
+  cases under a single top-level test using `t.Run("<case>", ...)`
+  rather than splitting them into separate `TestFoo_Success`,
+  `TestFoo_BadRequest`, etc. top-level functions.
+- Avoid `t.Parallel()` for fast tests. The scheduling overhead outweighs
+  the benefit; only reach for it when a test is measurably slow.
+
 ## Git workflow
 
 Use the `commit-writer` skill, if available, to draft commit messages.
