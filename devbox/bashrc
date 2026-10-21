@@ -160,13 +160,20 @@ command -v fzf      >/dev/null 2>&1 && eval "$(fzf --bash 2>/dev/null)"
 # Prompt
 # ---------------------------------------------------------------------------
 #
-# starship owns the prompt when present -- starship/starship.toml already
-# renders git_branch, git_status and git_state, so that is the real prompt.
+# starship owns the prompt when present, so that is the real prompt. Note that
+# starship.toml disables [git_branch] and [git_status] on purpose: the VCS
+# segment is ${custom.jj}, and jj-starship renders branch and dirty state for
+# both git and jj repos itself. Enabling the built-ins too would double up.
 #
 # The fallback below exists for when starship is not installed (--no-tools, or
 # a failed download): without it you get bare default bash with no branch
 # information at all, which is miserable in a repo. Set DEVBOX_GIT_PROMPT=0 to
 # skip the git part if it ever feels slow in a very large repository.
+#
+# A corollary worth remembering: starship installed *without* jj-starship is
+# the worst of both worlds -- the built-ins are off, custom.jj silently fails
+# its `when` guard, and this fallback is skipped because starship exists. Hence
+# install_jj_starship in devbox/tools.sh.
 
 # Prints " (branch*+?)" when inside a repo, nothing otherwise.
 #   *  unstaged changes      +  staged changes      ?  untracked files

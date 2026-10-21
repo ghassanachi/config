@@ -155,6 +155,26 @@ install_gh() {
         gh && ok "gh $tag"
 }
 
+# starship/starship.toml's only VCS segment is ${custom.jj}, which shells out
+# to this binary, and [git_branch]/[git_status] are disabled because
+# jj-starship renders both VCS types itself (it is a unified Git *and* jj
+# module, not jj-only). Without it the prompt shows no branch or dirty state in
+# any repo, git or jj -- the `when = "jj-starship detect"` guard just fails
+# silently.
+#
+# musl rather than the gnu triple: a static binary cannot be broken by whatever
+# glibc the beam's base image happens to ship. Unlike the tools above, the asset
+# name carries no version, so there is no ${tag#v} substitution here.
+install_jj_starship() {
+    local tag
+    tag=$(gh_latest_tag dmmulroy/jj-starship) || return 1
+    version_matches jj-starship "$tag" && { skip "jj-starship $tag"; return 0; }
+    step "jj-starship $tag"
+    install_from_tarball \
+        "https://github.com/dmmulroy/jj-starship/releases/download/$tag/jj-starship-x86_64-unknown-linux-musl.tar.gz" \
+        jj-starship && ok "jj-starship $tag"
+}
+
 # ---------------------------------------------------------------------------
 # Upstream: official install scripts
 # ---------------------------------------------------------------------------
@@ -197,7 +217,7 @@ main() {
     local failed=()
     local fn
     for fn in install_nvim install_eza install_delta install_fzf install_gh \
-              install_zoxide install_starship; do
+              install_zoxide install_starship install_jj_starship; do
         "$fn" || failed+=("${fn#install_}")
     done
 
