@@ -147,3 +147,8 @@ command -v zoxide   >/dev/null 2>&1 && eval "$(zoxide init --cmd j bash)"
 # `fzf --bash` needs fzf >= 0.48; devbox installs upstream for this reason.
 command -v fzf      >/dev/null 2>&1 && eval "$(fzf --bash 2>/dev/null)"
 command -v starship >/dev/null 2>&1 && eval "$(starship init bash)"
+
+# Return success explicitly. Every hook above is a `cmd && eval` guard, so a
+# missing tool leaves $? at 1 -- which would otherwise surface as a failure
+# status on the very first interactive prompt.
+true

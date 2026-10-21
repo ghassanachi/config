@@ -24,7 +24,8 @@ NVIM_FULL="${NVIM_FULL:-0}"
 # ripgrep    13.0    usually preinstalled
 # unzip / ca-certificates / tar  general prerequisites
 
-apt_packages=(trash-cli fd-find bat direnv ripgrep unzip ca-certificates)
+# jq is needed by link.sh to merge settings.json rather than clobber it.
+apt_packages=(trash-cli fd-find bat direnv ripgrep unzip ca-certificates jq)
 
 # build-essential is only needed by the full nvim stack: treesitter's :TSUpdate
 # compiles parsers, telescope-fzf-native has build = 'make', and LuaSnip builds

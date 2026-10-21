@@ -1,0 +1,3 @@
+# Project-local scratch space for intermediate files and comparison artifacts
+# (see claude/CLAUDE.md -- prefer this over /tmp).
+tmp/
