@@ -1,14 +1,19 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # Dev-box bootstrap. Designed to be piped straight from the network:
 #
+#   curl -fsSL dev.ghassanachi.com | sh
+#   curl -fsSL dev.ghassanachi.com | sh -s -- --full
 #   curl -fsSL https://raw.githubusercontent.com/ghassanachi/config/master/devbox/install.sh | bash
-#   curl -fsSL dev.ghassanachi.com | bash -s -- --full
+#
+# Deliberately POSIX sh (no arrays, no [[ ]]) so that `| sh` works as typed --
+# a piped script cannot re-exec itself under bash, since its source is stdin
+# rather than a file. tools.sh and link.sh are bash and are invoked as such.
 #
 # Because it may run with no repo present, this script is self-contained up to
 # the point where it clones the config repo and hands off to devbox/tools.sh
 # and devbox/link.sh. Safe to re-run.
 
-set -euo pipefail
+set -eu
 
 REPO_URL="${DEVBOX_REPO:-https://github.com/ghassanachi/config.git}"
 REPO_REF="${DEVBOX_REF:-master}"
@@ -19,8 +24,9 @@ DO_LINK=1
 NVIM_FULL="${NVIM_FULL:-0}"
 
 # alfred/ alone is 18MB of this repo's 19MB, and a dev box needs none of the
-# macOS trees. A shallow + blobless + sparse clone pulls roughly 1MB.
-SPARSE_PATHS=(devbox tmux nvim bin claude agentic starship sqlite jj)
+# macOS trees. A shallow + blobless + sparse clone pulls ~640KB instead of 50MB.
+# Space-separated (not an array) to stay POSIX; intentionally word-split below.
+SPARSE_PATHS="devbox tmux nvim bin claude agentic starship sqlite jj"
 
 usage() {
     cat <<'EOF'
@@ -61,7 +67,6 @@ export NVIM_FULL CONFIG_DIR
 # ---------------------------------------------------------------------------
 
 preflight() {
-    local arch
     arch=$(uname -m)
     [ "$arch" = "x86_64" ] || {
         printf 'error: only x86_64 is supported (found %s). The upstream asset\n' "$arch" >&2
@@ -105,7 +110,8 @@ clone_config() {
         git -C "$CONFIG_DIR" checkout -q --detach FETCH_HEAD
         # Refresh the sparse set in case this script added new paths since the
         # last run.
-        git -C "$CONFIG_DIR" sparse-checkout set "${SPARSE_PATHS[@]}" 2>/dev/null || true
+        # shellcheck disable=SC2086  # intentional word splitting
+        git -C "$CONFIG_DIR" sparse-checkout set $SPARSE_PATHS 2>/dev/null || true
         return 0
     fi
 
@@ -122,7 +128,8 @@ clone_config() {
         --filter=blob:none \
         --sparse \
         "$REPO_URL" "$CONFIG_DIR"
-    git -C "$CONFIG_DIR" sparse-checkout set "${SPARSE_PATHS[@]}"
+    # shellcheck disable=SC2086  # intentional word splitting
+    git -C "$CONFIG_DIR" sparse-checkout set $SPARSE_PATHS
 }
 
 # ---------------------------------------------------------------------------
@@ -132,12 +139,23 @@ main() {
     ensure_git
     clone_config
 
-    local devbox="$CONFIG_DIR/devbox"
+    devbox="$CONFIG_DIR/devbox"
     [ -d "$devbox" ] || { printf 'error: %s missing after clone\n' "$devbox" >&2; exit 1; }
     chmod +x "$devbox"/*.sh 2>/dev/null || true
 
-    [ "$DO_TOOLS" = "1" ] && bash "$devbox/tools.sh"
-    [ "$DO_LINK"  = "1" ] && bash "$devbox/link.sh"
+    # tools.sh and link.sh use arrays, so they need bash specifically -- this
+    # script itself may be running under dash via `| sh`.
+    command -v bash >/dev/null 2>&1 || {
+        printf 'error: bash is required for the install steps\n' >&2
+        exit 1
+    }
+
+    if [ "$DO_TOOLS" = "1" ]; then
+        bash "$devbox/tools.sh"
+    fi
+    if [ "$DO_LINK" = "1" ]; then
+        bash "$devbox/link.sh"
+    fi
 
     cat <<EOF
 
