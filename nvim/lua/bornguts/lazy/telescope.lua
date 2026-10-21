@@ -2,12 +2,23 @@ return {
     "nvim-telescope/telescope.nvim",
     dependencies = {
         "nvim-lua/plenary.nvim",
-        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        -- The only part of telescope needing a C toolchain (build = 'make'),
+        -- so on a dev box we keep telescope and drop just the native sorter.
+        -- See lua/bornguts/devbox.lua.
+        {
+            'nvim-telescope/telescope-fzf-native.nvim',
+            build = 'make',
+            enabled = require("bornguts.devbox").full,
+        },
     },
 
     config = function()
         require('telescope').setup({})
-        require('telescope').load_extension('fzf')
+        -- load_extension errors if the extension was never installed, so this
+        -- is conditional rather than unconditional.
+        if require("bornguts.devbox").full then
+            require('telescope').load_extension('fzf')
+        end
 
         local builtin = require('telescope.builtin')
         vim.keymap.set('n', '<C-p>', builtin.find_files, {})

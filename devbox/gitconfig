@@ -1,0 +1,65 @@
+# Dev-box git config, linked to ~/.gitconfig by devbox/link.sh.
+#
+# Identity is committed here because it is already public in this repo's own
+# history. Override per-box with the standard env vars if ever needed:
+#   GIT_AUTHOR_NAME / GIT_AUTHOR_EMAIL / GIT_COMMITTER_NAME / GIT_COMMITTER_EMAIL
+#
+# No credential.helper is set here on purpose -- `gh auth setup-git` (run by the
+# `ghlogin` shell function) writes that into this file itself after login.
+
+[user]
+	name = Ghassan Gedeon Achi
+	email = ghassan.achi@goteleport.com
+
+[init]
+	defaultBranch = master
+
+[pull]
+	rebase = true
+
+[push]
+	autoSetupRemote = true
+	followTags = true
+
+[fetch]
+	prune = true
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+
+# Record conflict resolutions so repeated rebases of the same branch (e.g.
+# rebasing the teleport branch onto master) only need resolving once.
+[rerere]
+	enabled = true
+	autoUpdate = true
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+[merge]
+	conflictStyle = zdiff3
+
+[core]
+	pager = delta
+	editor = nvim
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	line-numbers = true
+	syntax-theme = gruvbox-dark
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	lg = log --oneline --graph --decorate -20
+	last = log -1 --stat
+	unstage = reset HEAD --
+
+[safe]
+	directory = *

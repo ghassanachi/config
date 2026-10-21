@@ -1,6 +1,9 @@
 return {
 	{
 		"nvim-neotest/neotest",
+		-- Skipped on a dev box: depends on treesitter, which needs a compiler.
+		-- See lua/bornguts/devbox.lua.
+		enabled = require("bornguts.devbox").full,
 		dependencies = {
 			"nvim-neotest/nvim-nio",
 			"nvim-lua/plenary.nvim",

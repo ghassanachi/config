@@ -5,7 +5,14 @@ vim.opt.clipboard:append { 'unnamedplus' }
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
-vim.opt.shell = 'fish'
+-- Prefer fish for `:!` and `:terminal`, but fall back to the login shell when
+-- it is absent -- dev boxes do not have fish, and an unresolvable 'shell'
+-- breaks every shell-out (including plugins that use jobstart).
+if vim.fn.executable('fish') == 1 then
+    vim.opt.shell = 'fish'
+else
+    vim.opt.shell = vim.env.SHELL or '/bin/bash'
+end
 
 vim.opt.errorbells = false
 vim.opt.showcmd = true

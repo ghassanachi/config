@@ -1,0 +1,149 @@
+# shellcheck shell=bash
+# Dev-box bash rc -- sourced from ~/.bashrc by devbox/link.sh.
+#
+# A bash port of the muscle memory in fish/config.fish and profile/profile.
+# Dropped on purpose: brew shellenv, the macOS LDFLAGS/PKG_CONFIG_PATH pair,
+# fnm/jj completions (not installed here), and the auto-attach-to-"home" tmux
+# launcher -- that last one misbehaves inside the nested outer/inner tmux setup
+# and in shells spawned by tooling.
+
+# ---------------------------------------------------------------------------
+# PATH  (always, even non-interactive: scripts and ssh commands need the tools)
+# ---------------------------------------------------------------------------
+
+_devbox_path_prepend() {
+    [ -d "$1" ] || return 0
+    case ":$PATH:" in
+        *":$1:"*) ;;
+        *) PATH="$1:$PATH" ;;
+    esac
+}
+
+_devbox_path_prepend "$HOME/go/bin"
+_devbox_path_prepend "$HOME/.cargo/bin"
+_devbox_path_prepend "$HOME/.bin"
+_devbox_path_prepend "$HOME/.local/bin"
+export PATH
+
+if command -v nvim >/dev/null 2>&1; then
+    export EDITOR=nvim VISUAL=nvim
+else
+    export EDITOR=vim VISUAL=vim
+fi
+
+# ---------------------------------------------------------------------------
+# Everything below is interactive-only, so `ssh box cmd` and tool-spawned
+# shells stay fast and quiet.
+# ---------------------------------------------------------------------------
+
+case $- in
+    *i*) ;;
+    *) return 0 ;;
+esac
+
+# ---------------------------------------------------------------------------
+# Shell behaviour
+# ---------------------------------------------------------------------------
+
+set -o vi   # matches fish_vi_key_bindings
+
+shopt -s histappend checkwinsize cmdhist
+shopt -s globstar 2>/dev/null || true
+HISTSIZE=100000
+HISTFILESIZE=200000
+HISTCONTROL=ignoreboth:erasedups
+HISTIGNORE='ls:ll:cd:pwd:exit:clear'
+
+# ---------------------------------------------------------------------------
+# Aliases  (fish abbreviations have no bash equivalent, so these are aliases;
+# they expand on execution rather than inline, which is the only difference)
+# ---------------------------------------------------------------------------
+
+command -v eza  >/dev/null 2>&1 && alias ls='eza'
+command -v trash >/dev/null 2>&1 && alias rm='trash'
+command -v bat  >/dev/null 2>&1 && alias cat='bat'
+
+alias e='nvim'
+alias vim='nvim'
+alias vimdiff='nvim -d'
+
+alias c='cargo'
+alias ct='cargo t'
+
+alias ta='tmux attach'
+alias tn='tmux new -s'
+
+alias x509='openssl x509 -text -noout'
+
+# Git
+alias gs='git status'
+alias gb='git branch'
+alias ga='git add -p'
+alias gc='git commit -m'
+alias gca='git commit --amend -m'
+alias gco='git checkout'
+alias gsubi='git submodule update --init --recursive'
+alias gsubu='git submodule update --remote -- library'
+
+alias gp='git push'
+alias gpa='git push --all'
+alias gpA='git push --all && git push --tags'
+alias gpt='git push --tags'
+alias gpc='git push --set-upstream origin "$(git branch --show-current)"'
+
+alias gr='git rebase'
+alias gra='git rebase --abort'
+alias grc='git rebase --continue'
+alias gri='git rebase --interactive'
+alias grs='git rebase --skip'
+
+alias gah='git stash && git pull --rebase && git stash pop'
+
+# ---------------------------------------------------------------------------
+# Environment
+# ---------------------------------------------------------------------------
+
+export CARGO_INCREMENTAL=1
+export RUST_BACKTRACE=1
+
+if command -v fd >/dev/null 2>&1; then
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
+export FZF_DEFAULT_OPTS='--height 20%'
+
+GPG_TTY=$(tty 2>/dev/null) && export GPG_TTY
+
+# Colored man pages
+# from http://linuxtidbits.wordpress.com/2009/03/23/less-colors-for-man-pages/
+export LESS_TERMCAP_mb=$'\e[01;31m'       # begin blinking
+export LESS_TERMCAP_md=$'\e[01;38;5;74m'  # begin bold
+export LESS_TERMCAP_me=$'\e[0m'           # end mode
+export LESS_TERMCAP_se=$'\e[0m'           # end standout-mode
+export LESS_TERMCAP_so=$'\e[38;5;246m'    # begin standout-mode - info box
+export LESS_TERMCAP_ue=$'\e[0m'           # end underline
+export LESS_TERMCAP_us=$'\e[04;38;5;146m' # begin underline
+
+# ---------------------------------------------------------------------------
+# Functions
+# ---------------------------------------------------------------------------
+
+# The Teleport GitHub proxy is not provisioned for this identity (`tsh git ls`
+# returns no orgs), so private repos go through gh's own credentials. One
+# device-code login per beam, then git inherits it as a credential helper.
+ghlogin() {
+    command -v gh >/dev/null 2>&1 || { echo "gh is not installed" >&2; return 1; }
+    gh auth login --git-protocol https --web || return 1
+    gh auth setup-git
+    gh auth status
+}
+
+# ---------------------------------------------------------------------------
+# Shell hooks  (each guarded: a missing tool must not break the prompt)
+# ---------------------------------------------------------------------------
+
+command -v direnv   >/dev/null 2>&1 && eval "$(direnv hook bash)"
+command -v zoxide   >/dev/null 2>&1 && eval "$(zoxide init --cmd j bash)"
+# `fzf --bash` needs fzf >= 0.48; devbox installs upstream for this reason.
+command -v fzf      >/dev/null 2>&1 && eval "$(fzf --bash 2>/dev/null)"
+command -v starship >/dev/null 2>&1 && eval "$(starship init bash)"

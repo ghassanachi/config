@@ -2,6 +2,9 @@
 return {
     {
         "L3MON4D3/LuaSnip",
+        -- Skipped on a dev box: the jsregexp build needs make, and the cmp
+        -- stack it feeds lives in lsp.lua. See lua/bornguts/devbox.lua.
+        enabled = require("bornguts.devbox").full,
         -- follow latest release.
         version = "v2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
         -- install jsregexp (optional!).

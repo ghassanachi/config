@@ -1,5 +1,8 @@
 return {
     "neovim/nvim-lspconfig",
+    -- Skipped on a dev box: mason pulls four language servers and six CLI
+    -- tools. See lua/bornguts/devbox.lua.
+    enabled = require("bornguts.devbox").full,
     dependencies = {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",

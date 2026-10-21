@@ -1,6 +1,9 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	branch = "main",
+	-- Skipped on a dev box: :TSUpdate compiles parsers, which needs a C
+	-- toolchain. See lua/bornguts/devbox.lua.
+	enabled = require("bornguts.devbox").full,
 	build = ":TSUpdate",
 	lazy = false,
 	config = function()

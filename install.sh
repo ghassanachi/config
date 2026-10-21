@@ -47,9 +47,10 @@ ln -sf $CONFIG_DIR/profile/profile $HOME/.profile
 # rm $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc 2> /dev/null
 # cp $CONFIG_DIR/obsidian/.obsidian.vimrc $HOME/Documents/Obsidian\ Vault/.obsidian.vimrc
 
-# Tmux Conf and Local
+# Tmux Conf
+# NOTE: tmux.conf is the local/outer config (holds the F12 nesting toggle).
+# Dev boxes link tmux/tmux.server.conf instead -- see devbox/link.sh.
 ln -sf $CONFIG_DIR/tmux/tmux.conf $HOME/.tmux.conf
-ln -sf "$CONFIG_DIR/tmux/tmux.conf.local" "$HOME/.tmux.conf.local"
 
 # Alacritty Conf
 rm $HOME/.config/alacritty 2> /dev/null
