@@ -155,7 +155,46 @@ command -v direnv   >/dev/null 2>&1 && eval "$(direnv hook bash)"
 command -v zoxide   >/dev/null 2>&1 && eval "$(zoxide init --cmd j bash)"
 # `fzf --bash` needs fzf >= 0.48; devbox installs upstream for this reason.
 command -v fzf      >/dev/null 2>&1 && eval "$(fzf --bash 2>/dev/null)"
-command -v starship >/dev/null 2>&1 && eval "$(starship init bash)"
+
+# ---------------------------------------------------------------------------
+# Prompt
+# ---------------------------------------------------------------------------
+#
+# starship owns the prompt when present -- starship/starship.toml already
+# renders git_branch, git_status and git_state, so that is the real prompt.
+#
+# The fallback below exists for when starship is not installed (--no-tools, or
+# a failed download): without it you get bare default bash with no branch
+# information at all, which is miserable in a repo. Set DEVBOX_GIT_PROMPT=0 to
+# skip the git part if it ever feels slow in a very large repository.
+
+# Prints " (branch*+?)" when inside a repo, nothing otherwise.
+#   *  unstaged changes      +  staged changes      ?  untracked files
+_devbox_git_prompt() {
+    [ "${DEVBOX_GIT_PROMPT:-1}" = "1" ] || return 0
+
+    local ref flags=''
+    # Branch name, or a short SHA when detached. Both fail fast outside a repo.
+    ref=$(git symbolic-ref --quiet --short HEAD 2>/dev/null) \
+        || ref=$(git rev-parse --short HEAD 2>/dev/null) \
+        || return 0
+
+    # --quiet exits non-zero on any difference, which is far cheaper than
+    # parsing `git status` output.
+    git diff --no-ext-diff --quiet --ignore-submodules=dirty 2>/dev/null || flags="${flags}*"
+    git diff --no-ext-diff --cached --quiet --ignore-submodules=dirty 2>/dev/null || flags="${flags}+"
+    # head -1 so this stops at the first hit instead of listing every file.
+    [ -z "$(git ls-files --others --exclude-standard 2>/dev/null | head -1)" ] || flags="${flags}?"
+
+    printf ' (%s%s)' "$ref" "$flags"
+}
+
+if command -v starship >/dev/null 2>&1; then
+    eval "$(starship init bash)"
+else
+    # \[...\] wraps the escapes so bash measures the prompt width correctly.
+    PS1='\[\033[32m\]\u@\h\[\033[0m\]:\[\033[34m\]\w\[\033[0m\]\[\033[33m\]$(_devbox_git_prompt)\[\033[0m\]\$ '
+fi
 
 # Return success explicitly. Every hook above is a `cmd && eval` guard, so a
 # missing tool leaves $? at 1 -- which would otherwise surface as a failure
