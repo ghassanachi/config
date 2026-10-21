@@ -25,7 +25,7 @@ link_configs() {
 
     link "$CONFIG_DIR/nvim"                  "$HOME/.config/nvim"
     link "$CONFIG_DIR/bin"                   "$HOME/.bin"
-    link "$DEVBOX_DIR/gitconfig"             "$HOME/.gitconfig"
+    # ~/.gitconfig is NOT linked -- see include_gitconfig below.
     link "$CONFIG_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
     link "$CONFIG_DIR/sqlite"                "$HOME/.config/sqlite3"
     link "$CONFIG_DIR/jj/config.toml"        "$HOME/.config/jj/config.toml"
@@ -168,8 +168,41 @@ merge_claude_settings() {
     rm -f "$tmp"
 }
 
+# ~/.gitconfig is included, not symlinked.
+#
+# `gh auth setup-git` writes a credential helper into the global git config. If
+# ~/.gitconfig were a symlink into this repo, that machine-local credential
+# wiring would be written into the *tracked* file -- dirtying the repo, and
+# being discarded the next time this script re-linked it. Worse, the token
+# plumbing would silently stop working after a re-run.
+#
+# An [include] keeps the shared settings versioned while leaving ~/.gitconfig a
+# real, machine-local file. Include is also resolved before the including
+# file's own later entries, so anything gh (or you) adds locally wins.
+include_gitconfig() {
+    local shared="$DEVBOX_DIR/gitconfig"
+    [ -f "$shared" ] || { warn "missing, not included: $shared"; return 0; }
+
+    # An earlier version of this script symlinked it; convert to a real file.
+    if [ -L "$HOME/.gitconfig" ]; then
+        rm -f "$HOME/.gitconfig"
+        warn "replaced the ~/.gitconfig symlink with an include"
+    fi
+
+    if git config --global --get-all include.path 2>/dev/null | grep -qxF "$shared"; then
+        # shellcheck disable=SC2088  # display string, not a path to expand
+        skip "~/.gitconfig already includes devbox/gitconfig"
+        return 0
+    fi
+
+    git config --global --add include.path "$shared"
+    # shellcheck disable=SC2088  # display string, not a path to expand
+    ok "~/.gitconfig includes devbox/gitconfig"
+}
+
 main() {
     link_configs
+    include_gitconfig
     compose_claude_md
     merge_claude_settings
     make_dirs

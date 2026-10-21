@@ -31,12 +31,24 @@ Environment overrides: `DEVBOX_REPO`, `DEVBOX_REF`, `CONFIG_DIR`, `NVIM_FULL`,
 
 1. **Preflight** — requires Debian/Ubuntu, x86_64, a non-root user, and curl.
 2. **Clone** `~/.config/dotfiles`, shallow + blobless + sparse. Only the paths a
-   dev box needs are checked out, which matters because `alfred/` is the bulk of
-   this repo: **640KB cloned instead of ~50MB**.
+   dev box needs are checked out: **640KB cloned instead of a full clone**.
 3. **Tools** — see the table below. Everything that is not an apt package lands
    in `~/.local/bin`, so only the apt step needs sudo.
 4. **Link** — symlinks into `$HOME`, appends a marker block to `~/.bashrc`, and
    creates `~/.vim/undodir` (which `set.lua` requires for `undofile`).
+
+`~/.gitconfig` is the one config that is **included rather than symlinked**:
+
+```ini
+[include]
+	path = ~/.config/dotfiles/devbox/gitconfig
+```
+
+`gh auth setup-git` writes a credential helper into the global git config. Were
+`~/.gitconfig` a symlink into the repo, that machine-local credential wiring
+would be written into the tracked file and then discarded on the next re-link,
+silently breaking authentication. The include keeps shared settings versioned
+while `~/.gitconfig` stays a real, machine-local file.
 
 ## Tooling: apt vs upstream
 
