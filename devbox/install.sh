@@ -21,6 +21,8 @@ CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/dotfiles}"
 
 DO_TOOLS=1
 DO_LINK=1
+DO_TMUX="${DEVBOX_TMUX:-1}"
+TMUX_SESSION="${DEVBOX_TMUX_SESSION:-home}"
 NVIM_FULL="${NVIM_FULL:-0}"
 
 # alfred/ alone is 18MB of this repo's 19MB, and a dev box needs none of the
@@ -38,12 +40,15 @@ Options:
                   profile: same keymaps and options, no compiler, ~20s.
   --no-tools      Skip tool installation; only link configs.
   --no-link       Skip linking; only install tools.
+  --no-tmux       Do not attach to tmux when finished.
+  --session <name>  tmux session to attach to (default: home).
   --ref <ref>     Branch or tag to install from (default: master).
   --dir <path>    Where to clone the config repo (default: ~/.config/dotfiles).
   -h, --help      Show this help.
 
 Environment:
-  DEVBOX_REPO, DEVBOX_REF, CONFIG_DIR, NVIM_FULL, BIN_DIR
+  DEVBOX_REPO, DEVBOX_REF, CONFIG_DIR, NVIM_FULL, BIN_DIR,
+  DEVBOX_TMUX=0, DEVBOX_TMUX_SESSION
 EOF
 }
 
@@ -52,6 +57,8 @@ while [ $# -gt 0 ]; do
         --full)     NVIM_FULL=1 ;;
         --no-tools) DO_TOOLS=0 ;;
         --no-link)  DO_LINK=0 ;;
+        --no-tmux)  DO_TMUX=0 ;;
+        --session)  TMUX_SESSION="${2:?--session needs a value}"; shift ;;
         --ref)      REPO_REF="${2:?--ref needs a value}"; shift ;;
         --dir)      CONFIG_DIR="${2:?--dir needs a value}"; shift ;;
         -h|--help)  usage; exit 0 ;;
@@ -133,6 +140,59 @@ clone_config() {
 }
 
 # ---------------------------------------------------------------------------
+# Finish inside tmux
+# ---------------------------------------------------------------------------
+#
+# Attaching at the end hands back a shell that has actually sourced the new
+# bashrc -- PATH, aliases, vi mode, prompt -- with no manual reload step.
+#
+# The catch: under `curl ... | sh` stdin is the *pipe*, not a terminal, so a
+# plain `exec tmux` dies with "open terminal failed: not a terminal".
+#
+# And `< /dev/tty` does NOT fix it: tmux resolves the tty name of its stdin and
+# explicitly rejects the /dev/tty alias with "open terminal failed: can't use
+# /dev/tty" -- it wants the real device. stdout is still the terminal in that
+# pipeline, so fd 1 is where the actual /dev/pts/N comes from.
+attach_tmux() {
+    [ "$DO_TMUX" = "1" ] || return 0
+    command -v tmux >/dev/null 2>&1 || return 0
+
+    # Already multiplexed -- do not start a nested server in the same pane.
+    if [ -n "${TMUX:-}" ]; then
+        printf '\nAlready inside tmux; not attaching. Run: exec bash -l\n'
+        return 0
+    fi
+
+    # Run directly rather than piped: stdin is already the terminal.
+    if [ -t 0 ]; then
+        printf '\nAttaching to tmux session "%s"...\n' "$TMUX_SESSION"
+        # -A attaches if the session exists, creates it otherwise.
+        exec tmux new-session -A -s "$TMUX_SESSION"
+    fi
+
+    # Piped: recover the real terminal device from this shell's own stdout or
+    # stderr.
+    #
+    # Note /proc/$$/ and not /proc/self/ -- a command substitution runs in a
+    # subshell whose stdout is the capture pipe, so /proc/self/fd/1 would
+    # resolve to that pipe. $$ stays the PID of the invoking shell, whose fd 1
+    # is still the terminal.
+    for fd in 1 2; do
+        tty_dev=$(readlink "/proc/$$/fd/$fd" 2>/dev/null || true)
+        case "$tty_dev" in
+            /dev/pts/*|/dev/tty[0-9]*)
+                printf '\nAttaching to tmux session "%s"...\n' "$TMUX_SESSION"
+                exec tmux new-session -A -s "$TMUX_SESSION" < "$tty_dev"
+                ;;
+        esac
+    done
+
+    # No terminal at all (CI, `ssh host cmd`, a provisioning hook): finish
+    # normally rather than failing.
+    printf '\nNo terminal available; skipping tmux. Run: exec bash -l\n'
+}
+
+# ---------------------------------------------------------------------------
 
 main() {
     preflight
@@ -161,10 +221,8 @@ main() {
 
 Done. Config: $CONFIG_DIR
 
-Next:
-  exec bash -l                 reload the shell (picks up ~/.local/bin, aliases, prompt)
   ghlogin                      GitHub device-code login, then wires git credentials
-  tmux new -s work             start a session (F12 in your LOCAL tmux hands keys to this one)
+  F12 (in your LOCAL tmux)     hands the keyboard to this box's tmux
 EOF
 
     if [ "$NVIM_FULL" != "1" ]; then
@@ -175,6 +233,8 @@ harpoon, fugitive and undotree -- no LSP/treesitter, no compiler needed.
 For the full stack: re-run with --full, or `NVIM_FULL=1 nvim`.
 EOF
     fi
+
+    attach_tmux
 }
 
 main "$@"

@@ -7,6 +7,15 @@
 # launcher -- that last one misbehaves inside the nested outer/inner tmux setup
 # and in shells spawned by tooling.
 
+# Sourced from both ~/.bashrc and ~/.profile, because bash reads only the
+# former for interactive non-login shells and only the latter for login shells
+# (tmux starts login shells). This guard makes the overlap free. It is
+# deliberately not exported, so every new shell still sources this file once.
+if [ -n "${_DEVBOX_BASHRC_SOURCED:-}" ]; then
+    return 0
+fi
+_DEVBOX_BASHRC_SOURCED=1
+
 # ---------------------------------------------------------------------------
 # PATH  (always, even non-interactive: scripts and ssh commands need the tools)
 # ---------------------------------------------------------------------------

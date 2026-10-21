@@ -60,11 +60,18 @@ make_dirs() {
     ok "~/.vim/undodir"
 }
 
-# Append a marker-delimited block to ~/.bashrc rather than replacing the file:
-# the beam's stock bashrc has useful defaults, and a marker block stays
-# idempotent across re-runs (the old block is stripped first).
-hook_bashrc() {
-    local rc="$HOME/.bashrc"
+# Append a marker-delimited block rather than replacing the file: the stock
+# bashrc has useful defaults, and a marker block stays idempotent across
+# re-runs (the old block is stripped first).
+#
+# Done for BOTH ~/.bashrc and ~/.profile, which is not redundant: bash reads
+# ~/.bashrc for interactive non-login shells and ~/.profile for login shells,
+# and tmux starts login shells. Debian's stock ~/.profile happens to chain to
+# ~/.bashrc, but relying on that means a replaced or absent ~/.profile
+# silently costs you every alias inside tmux. devbox/bashrc carries its own
+# already-sourced guard, so covering both files is free.
+hook_shell_rc() {
+    local rc="$1" label="$2"
     [ -f "$rc" ] || touch "$rc"
 
     if grep -qF "$BASHRC_MARKER_START" "$rc"; then
@@ -82,8 +89,14 @@ hook_bashrc() {
         printf '%s\n' "$BASHRC_MARKER_END"
     } >> "$rc"
 
-    # shellcheck disable=SC2088  # display string, not a path to expand
-    ok "~/.bashrc sources devbox/bashrc"
+    ok "$label sources devbox/bashrc"
+}
+
+hook_bashrc() {
+    # shellcheck disable=SC2088  # display strings, not paths to expand
+    hook_shell_rc "$HOME/.bashrc" "~/.bashrc"
+    # shellcheck disable=SC2088
+    hook_shell_rc "$HOME/.profile" "~/.profile  (login shells, e.g. tmux)"
 }
 
 CLAUDE_MD_MARKER_START="<!-- >>> devbox (managed by config/devbox) >>> -->"
