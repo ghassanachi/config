@@ -177,12 +177,25 @@ attach_tmux() {
     # subshell whose stdout is the capture pipe, so /proc/self/fd/1 would
     # resolve to that pipe. $$ stays the PID of the invoking shell, whose fd 1
     # is still the terminal.
+    #
+    # The device must be opened read-WRITE (`<>`), not read-only (`<`). A tmux
+    # client hands its stdin descriptor to the server over the control socket,
+    # and the server then uses that one descriptor for *both* directions of
+    # terminal I/O -- it reads keys from it and draws the screen through it. A
+    # read-only fd therefore produces a client that connects, creates the
+    # session, and then hangs forever with a blank screen: the server is
+    # happily reading keystrokes while every write it attempts fails with
+    # EBADF. No error is printed, because printing the error is itself a write
+    # to the same dead fd.
+    #
+    # `<>` is POSIX (XCU 2.7.6) and works under dash, so this stays compatible
+    # with `| sh`.
     for fd in 1 2; do
         tty_dev=$(readlink "/proc/$$/fd/$fd" 2>/dev/null || true)
         case "$tty_dev" in
             /dev/pts/*|/dev/tty[0-9]*)
                 printf '\nAttaching to tmux session "%s"...\n' "$TMUX_SESSION"
-                exec tmux new-session -A -s "$TMUX_SESSION" < "$tty_dev"
+                exec tmux new-session -A -s "$TMUX_SESSION" <>"$tty_dev"
                 ;;
         esac
     done
