@@ -1,3 +1,15 @@
-# Project-local scratch space for intermediate files and comparison artifacts
-# (see claude/CLAUDE.md -- prefer this over /tmp).
+# Project-local scratch space (see claude/CLAUDE.md -- prefer this over /tmp).
 tmp/
+
+# macOS noise
+.DS_Store
+
+# Alfred generated/vendored content -- this was the repo's bloat.
+alfred/Alfred.alfredpreferences/remote/images/
+alfred/**/icon-cache/
+alfred/**/*.so
+*.pyc
+__pycache__/
+
+# nvim writes one wherever it is launched from, so not just nvim/.nvimlog
+.nvimlog
