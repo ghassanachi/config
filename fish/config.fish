@@ -48,10 +48,13 @@ abbr -a vimdiff 'nvim -d'
 abbr -a x509 'openssl x509 -text -noout'
 
 # Teleport
-alias tsh-e=$HOME/developer/working/teleport/e/build/tsh
-alias teleport-e=$HOME/developer/working/teleport/e/build/teleport
-alias tctl-e=$HOME/developer/working/teleport/e/build/tctl
-alias tbot-e=$HOME/developer/working/teleport/e/build/tbot
+alias tsh-e=$HOME/developer/working/teleport-core/e/build/tsh
+alias teleport-e=$HOME/developer/working/teleport-core/e/build/teleport
+alias tctl-e=$HOME/developer/working/teleport-core/e/build/tctl
+alias tbot-e=$HOME/developer/working/teleport-core/e/build/tbot
+
+# Labctl
+alias labctl=$HOME/developer/idsec-lab/labctl
 
 # --- Path Overide ---------------------------------------------------
 
