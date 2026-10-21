@@ -1,0 +1,11 @@
+name = "devbox-install"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = false
+
+# Binds the Worker to the bare hostname so `curl dev.ghassanachi.com` hits it
+# at the root path. Cloudflare creates the DNS record for a custom domain
+# itself, so no separate CNAME is needed.
+[[routes]]
+pattern = "dev.ghassanachi.com"
+custom_domain = true

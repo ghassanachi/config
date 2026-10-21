@@ -21,4 +21,9 @@ require("lazy").setup({
 	install = {
 		colorscheme = { "gruvbox" },
 	},
+	-- plenary.nvim ships a rockspec, so lazy tries to install it through
+	-- luarocks/hererocks, which needs a Lua 5.1 build that dev boxes do not
+	-- have. It fails noisily on every startup and then builds from source
+	-- anyway, which is all we need -- so skip straight to that.
+	rocks = { enabled = false },
 })
