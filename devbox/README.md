@@ -67,7 +67,7 @@ absent or stale enough to break how the config actually uses the tool.
 | `neovim` | bookworm has **0.7.2**; `treesitter.lua` pins `branch = "main"`, needing 0.11+ |
 | `fzf` | bookworm has **0.38**, which predates `fzf --bash` (added in 0.48.0) |
 | `zoxide` | bookworm has **0.4.3**, ~5 years stale; `init --cmd j` is not dependable there |
-| `eza`, `git-delta`, `starship`, `gh` | not packaged in bookworm at all |
+| `eza`, `git-delta`, `starship`, `gh`, `jj` | not packaged in bookworm at all |
 
 Versions resolve through the `releases/latest` *redirect* rather than the GitHub
 REST API, which is rate-limited to 60 requests/hour per IP — a pool of beams

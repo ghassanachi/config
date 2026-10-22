@@ -3,7 +3,7 @@
 #
 # A bash port of the muscle memory in fish/config.fish and profile/profile.
 # Dropped on purpose: brew shellenv, the macOS LDFLAGS/PKG_CONFIG_PATH pair,
-# fnm/jj completions (not installed here), and the auto-attach-to-"home" tmux
+# fnm completions (fnm is not installed here), and the auto-attach-to-"home" tmux
 # launcher -- that last one misbehaves inside the nested outer/inner tmux setup
 # and in shells spawned by tooling.
 
@@ -155,6 +155,10 @@ command -v direnv   >/dev/null 2>&1 && eval "$(direnv hook bash)"
 command -v zoxide   >/dev/null 2>&1 && eval "$(zoxide init --cmd j bash)"
 # `fzf --bash` needs fzf >= 0.48; devbox installs upstream for this reason.
 command -v fzf      >/dev/null 2>&1 && eval "$(fzf --bash 2>/dev/null)"
+# jj's completion generator is itself a jj subcommand, so it loads the whole
+# binary on every shell start. That is a few ms, and it is swallowed by the
+# same guard as the rest, so it is not worth deferring to a lazy loader.
+command -v jj       >/dev/null 2>&1 && eval "$(jj util completion bash 2>/dev/null)"
 
 # ---------------------------------------------------------------------------
 # Prompt

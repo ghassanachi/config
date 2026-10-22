@@ -155,6 +155,28 @@ install_gh() {
         gh && ok "gh $tag"
 }
 
+# jj (jujutsu) is not packaged in bookworm at all. It is installed from the
+# musl build for the same reason as jj-starship below: a static binary cannot
+# be broken by whatever glibc the beam's base image happens to ship.
+#
+# Two traps worth recording, because both fail quietly rather than loudly:
+#
+#   * The repo is jj-vcs/jj, not the older martinvonz/jj. The old path still
+#     resolves, but its releases/latest redirect does not land on a tag, so
+#     gh_latest_tag returns the literal string "latest" and the URL built from
+#     it 404s.
+#   * The asset name keeps the tag's leading "v" (jj-v0.46.0-...), unlike
+#     delta/fzf/gh above, so there is no ${tag#v} substitution here.
+install_jj() {
+    local tag
+    tag=$(gh_latest_tag jj-vcs/jj) || return 1
+    version_matches jj "$tag" && { skip "jj $tag"; return 0; }
+    step "jj $tag"
+    install_from_tarball \
+        "https://github.com/jj-vcs/jj/releases/download/$tag/jj-$tag-x86_64-unknown-linux-musl.tar.gz" \
+        jj && ok "jj $tag"
+}
+
 # starship/starship.toml's only VCS segment is ${custom.jj}, which shells out
 # to this binary, and [git_branch]/[git_status] are disabled because
 # jj-starship renders both VCS types itself (it is a unified Git *and* jj
@@ -217,7 +239,7 @@ main() {
     local failed=()
     local fn
     for fn in install_nvim install_eza install_delta install_fzf install_gh \
-              install_zoxide install_starship install_jj_starship; do
+              install_zoxide install_starship install_jj install_jj_starship; do
         "$fn" || failed+=("${fn#install_}")
     done
 
