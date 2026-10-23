@@ -77,6 +77,78 @@ install_from_tarball() {
     done
 }
 
+# Install a whole archive as a tree under OPT_DIR, then symlink binaries out of
+# it into BIN_DIR.
+#
+#   install_opt_tree <url> <dir-name> <strip-components> <rel-bin-path>...
+#
+# Needed instead of install_from_tarball whenever a binary cannot be lifted out
+# of the archive on its own because it depends on siblings in the tree: go needs
+# its GOROOT (lib/, pkg/, src/), node needs lib/node_modules, protoc needs
+# include/ for the well-known types, and nvim needs runtime/. Each resolves
+# those relative to its *own* real path, which is why a symlink into the tree
+# works while a copied-out binary does not.
+#
+# The archive is downloaded to a file and then extracted, rather than piped
+# straight into tar, so that the same call handles both .tar.gz (go, protoc) and
+# .tar.xz (node). tar only auto-detects compression on a *seekable* input: fed
+# from a pipe it gives up with "Archive is compressed. Use -z option" instead.
+# The cost is the tarball briefly on disk (~80MB for Go), which beats either a
+# per-caller compression flag or a second helper.
+#
+# .tar.xz additionally needs the `xz` binary present for tar to shell out to.
+#
+# TODO: install_nvim in tools.sh predates this and still hand-rolls the same
+# steps; it could be folded onto this helper next time it needs touching.
+install_opt_tree() {
+    local url="$1" name="$2" strip="$3"; shift 3
+    local tmp rel
+    tmp=$(mktemp -d) || return 1
+
+    # tar shells out to `xz` for .tar.xz and reports only "Child returned status
+    # 2" when it is missing, which is a miserable thing to debug. Say it plainly.
+    case "$url" in
+        *.tar.xz|*.txz)
+            have xz || {
+                warn "xz is required for $url (apt install xz-utils)"
+                rm -rf "$tmp"
+                return 1
+            }
+            ;;
+    esac
+
+    # A longer timeout than install_from_tarball: these are whole toolchains
+    # (the Go tarball alone is ~80MB) rather than single static binaries.
+    mkdir -p "$tmp/x"
+    if curl -fsSL --max-time 600 "$url" -o "$tmp/archive"; then
+        tar -xf "$tmp/archive" -C "$tmp/x" --strip-components="$strip" || {
+            warn "extract failed: $url"
+            rm -rf "$tmp"
+            return 1
+        }
+    else
+        warn "download failed: $url"
+        rm -rf "$tmp"
+        return 1
+    fi
+    rm -f "$tmp/archive"
+
+    # Replace rather than merge: a stale tree from a previous version would
+    # otherwise leave orphaned files that shadow the new ones.
+    # ${var:?} so a caller that somehow passed an empty OPT_DIR or name cannot
+    # turn this into `rm -rf /`.
+    mkdir -p "$OPT_DIR"
+    rm -rf "${OPT_DIR:?}/${name:?}"
+    mv "$tmp/x" "$OPT_DIR/$name" || { rm -rf "$tmp"; return 1; }
+    rm -rf "$tmp"
+
+    mkdir -p "$BIN_DIR"
+    for rel in "$@"; do
+        [ -e "$OPT_DIR/$name/$rel" ] || { warn "'$rel' not found in $name archive"; return 1; }
+        ln -sfn "$OPT_DIR/$name/$rel" "$BIN_DIR/$(basename "$rel")" || return 1
+    done
+}
+
 # Print the version of an installed tool, normalised to a bare number.
 # Returns non-zero when the tool is absent.
 tool_version() {

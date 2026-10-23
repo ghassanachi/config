@@ -25,6 +25,10 @@ DO_TMUX="${DEVBOX_TMUX:-1}"
 TMUX_SESSION="${DEVBOX_TMUX_SESSION:-home}"
 NVIM_FULL="${NVIM_FULL:-0}"
 
+# Empty means "do not install the Teleport toolchain". devbox/teleport-tools.sh
+# is still linked onto PATH by link.sh either way, so it stays one command away.
+TELEPORT_PROFILE="${DEVBOX_TELEPORT:-}"
+
 # alfred/ alone is 18MB of this repo's 19MB, and a dev box needs none of the
 # macOS trees. A shallow + blobless + sparse clone pulls ~640KB instead of 50MB.
 # Space-separated (not an array) to stay POSIX; intentionally word-split below.
@@ -35,9 +39,14 @@ usage() {
 Usage: install.sh [options]
 
 Options:
-  --full          Install the complete nvim stack (LSP/mason, treesitter,
-                  neotest, cmp) plus build-essential. Default is the lean
+  --full          Everything: the complete nvim stack (LSP/mason, treesitter,
+                  neotest, cmp) plus build-essential, AND the Teleport
+                  toolchain (implies --teleport=full). Default is the lean
                   profile: same keymaps and options, no compiler, ~20s.
+  --teleport[=P]  Install the Teleport toolchain for building/linting/testing
+                  gravitational/core and gravitational/access-graph.
+                  P is full (default), backend or frontend. Use this instead
+                  of --full to get the toolchain without the nvim stack.
   --no-tools      Skip tool installation; only link configs.
   --no-link       Skip linking; only install tools.
   --no-tmux       Do not attach to tmux when finished.
@@ -48,13 +57,15 @@ Options:
 
 Environment:
   DEVBOX_REPO, DEVBOX_REF, CONFIG_DIR, NVIM_FULL, BIN_DIR,
-  DEVBOX_TMUX=0, DEVBOX_TMUX_SESSION
+  DEVBOX_TMUX=0, DEVBOX_TMUX_SESSION, DEVBOX_TELEPORT=full|backend|frontend
 EOF
 }
 
 while [ $# -gt 0 ]; do
     case "$1" in
-        --full)     NVIM_FULL=1 ;;
+        --full)     NVIM_FULL=1; TELEPORT_PROFILE=full ;;
+        --teleport) TELEPORT_PROFILE=full ;;
+        --teleport=*) TELEPORT_PROFILE="${1#--teleport=}" ;;
         --no-tools) DO_TOOLS=0 ;;
         --no-link)  DO_LINK=0 ;;
         --no-tmux)  DO_TMUX=0 ;;
@@ -66,6 +77,14 @@ while [ $# -gt 0 ]; do
     esac
     shift
 done
+
+# Validate here rather than letting teleport-tools.sh reject it at the very end
+# of an otherwise successful bootstrap.
+case "$TELEPORT_PROFILE" in
+    ''|full|backend|frontend) ;;
+    *) printf 'error: --teleport profile must be full, backend or frontend (got %s)\n' \
+            "$TELEPORT_PROFILE" >&2; exit 2 ;;
+esac
 
 export NVIM_FULL CONFIG_DIR
 
@@ -230,6 +249,13 @@ main() {
         bash "$devbox/link.sh"
     fi
 
+    # Last, and only on request: this step is minutes rather than seconds, and
+    # everything above it is what makes the box usable at all. Running it here
+    # also means it inherits the PATH that link.sh just set up.
+    if [ -n "$TELEPORT_PROFILE" ]; then
+        bash "$devbox/teleport-tools.sh" "$TELEPORT_PROFILE"
+    fi
+
     cat <<EOF
 
 Done. Config: $CONFIG_DIR
@@ -237,6 +263,17 @@ Done. Config: $CONFIG_DIR
   ghlogin                      GitHub device-code login, then wires git credentials
   F12 (in your LOCAL tmux)     hands the keyboard to this box's tmux
 EOF
+
+    if [ -z "$TELEPORT_PROFILE" ]; then
+        cat <<'EOF'
+
+The Teleport toolchain (Go, Rust, Node, pnpm, ...) is NOT installed. When a
+session needs to build, lint or test core or access-graph:
+
+  teleport-tools               full (default), or: backend | frontend
+  teleport-tools --dry-run     show the versions it would install
+EOF
+    fi
 
     if [ "$NVIM_FULL" != "1" ]; then
         cat <<'EOF'

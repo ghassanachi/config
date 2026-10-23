@@ -13,8 +13,12 @@ Re-running is safe — every step is skipped when already satisfied.
 ## Options
 
 ```sh
-# full nvim stack (LSP/mason, treesitter, neotest, cmp) + build-essential
+# everything: full nvim stack + build-essential + the Teleport toolchain
 curl -fsSL .../devbox/install.sh | bash -s -- --full
+
+# the Teleport toolchain without the nvim stack
+... | bash -s -- --teleport
+... | bash -s -- --teleport=backend
 
 # link configs without installing tools, or vice versa
 ... | bash -s -- --no-tools
@@ -25,7 +29,7 @@ curl -fsSL .../devbox/install.sh | bash -s -- --full
 ```
 
 Environment overrides: `DEVBOX_REPO`, `DEVBOX_REF`, `CONFIG_DIR`, `NVIM_FULL`,
-`BIN_DIR`.
+`BIN_DIR`, `DEVBOX_TELEPORT`.
 
 ## What it does
 
@@ -36,6 +40,7 @@ Environment overrides: `DEVBOX_REPO`, `DEVBOX_REF`, `CONFIG_DIR`, `NVIM_FULL`,
    in `~/.local/bin`, so only the apt step needs sudo.
 4. **Link** — symlinks into `$HOME`, appends a marker block to `~/.bashrc`, and
    creates `~/.vim/undodir` (which `set.lua` requires for `undofile`).
+5. **Teleport toolchain** — only with `--full` / `--teleport`. See below.
 
 `~/.gitconfig` is the one config that is **included rather than symlinked**:
 
@@ -72,6 +77,88 @@ absent or stale enough to break how the config actually uses the tool.
 Versions resolve through the `releases/latest` *redirect* rather than the GitHub
 REST API, which is rate-limited to 60 requests/hour per IP — a pool of beams
 shares egress and would hit that.
+
+## Teleport tooling: opt-in
+
+Building `gravitational/core` or `gravitational/access-graph` needs Go, Rust,
+Node and friends — roughly **1.5GB and several minutes**. Most beams are used to
+read logs or restructure a PR stack and need none of it, so it is never
+installed by default. `devbox/teleport-tools.sh` is always symlinked onto PATH
+as `teleport-tools`, and runs only when asked:
+
+```sh
+teleport-tools               # full (default)
+teleport-tools backend       # Go, golangci-lint, buf, protoc, Rust
+teleport-tools frontend      # Node, pnpm, Rust + wasm32, wasm-opt
+teleport-tools --dry-run     # print resolved versions, install nothing
+```
+
+`install.sh --full` implies `--teleport=full`; `--teleport[=PROFILE]` gets the
+toolchain without the nvim stack.
+
+| profile | contents |
+|---|---|
+| `backend` | Go, golangci-lint, buf, protoc, Rust + clippy/rustfmt, `libpcsclite-dev` |
+| `frontend` | Node, pnpm via corepack, Rust + `wasm32-unknown-unknown`, wasm-opt |
+| `full` | both, plus helm and the helm-unittest plugin |
+
+`build-essential` (i.e. **make** and gcc), `pkg-config`, `shellcheck` and
+`xz-utils` are installed for every profile — a stock beam has none of them, and
+every Teleport target starts with `make`.
+
+### Versions are resolved, not hardcoded
+
+These pins move every few weeks, and a stale Go minor is exactly the kind of
+thing that burns an hour mid-debug. So the in-script pins are only an offline
+fallback; the real source is resolved per run:
+
+1. `--from-repo DIR` — a local `core` checkout
+2. **`gravitational/core` via `gh`** — needs `ghlogin`, and is the only
+   authoritative remote source
+3. `gravitational/teleport` (public) — shares `build.assets` but **trails
+   core**: at the time of writing core was on Go 1.27.3 / golangci-lint 2.14.0
+   while public master was still on 1.26.7 / 2.12.2. Used only as a fallback,
+   and the summary says so when it is
+4. the built-in pins
+
+Any single version can be forced with `TP_GO_VERSION`, `TP_NODE_VERSION`,
+`TP_RUST_VERSION`, etc. — see `teleport-tools --help`.
+
+**helm is pinned, not tracked**, and that one is load-bearing: the buildbox CI
+runs chart tests in installs **helm v3.12.2** (`build.assets/Dockerfile`), while
+`helm/helm`'s latest release is now **4.x**. Helm 4 is a different major with
+breaking template changes, so installing "latest" renders the charts differently
+from CI and turns `make test-helm` into a pile of spurious snapshot diffs. The
+version is parsed back out of that Dockerfile.
+
+`buf` is the one tool tracked at latest, because neither repo pins a CLI version
+for external use.
+
+### What is deliberately not installed
+
+- **buf, gotestsum, gci, goda, benchstat** for core — its `common.mk` resolves
+  these through `go tool -n` from `build.assets/tools/`, so a correct Go is all
+  they need. The `buf` installed here is for **access-graph**, whose Makefile
+  calls `buf generate` directly.
+- **wasm-bindgen-cli** — core reads its version out of `Cargo.lock` and installs
+  it itself in `ensure-wasm-deps`, which needs the checkout in hand.
+- **Cross-compilation targets.** `rust-toolchain.toml` also lists
+  `x86_64-pc-windows-gnu`; only the wasm target is installed, since the Windows
+  one exists to cross-build a release `tsh` rather than to build/lint/test.
+- **Antithesis, FIPS/BoringSSL, libfido2, BPF/clang** — niche, and absent only
+  turns off the corresponding build tag.
+- **Cloud tooling** (`qdeploy`, `ecr-tags`, `labctl`) — not used from beams.
+
+Rust is in *both* profiles on purpose: the backend needs it for `rdp-client` and
+`fdpass-teleport`, and `make lint-rust` / `make test-rust` silently become
+no-ops when cargo is missing — a green run that tested nothing. The frontend
+needs it for the ironrdp WASM module.
+
+### Known limitation
+
+**docker is not available on a beam**, so access-graph's `make postgres-start`
+and the docker-compose dev stack cannot run here. Go and pnpm builds, lint and
+unit tests all work.
 
 ## nvim: lean by default
 

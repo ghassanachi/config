@@ -35,6 +35,12 @@ link_configs() {
     # personal config does not. keybindings are pure UX, so a plain link.
     link "$CONFIG_DIR/claude/keybindings.json" "$HOME/.claude/keybindings.json"
 
+    # teleport-tools is linked onto PATH but never run from here: it installs
+    # ~1.5GB of Go/Rust/Node that most beams have no use for. Linking it
+    # unconditionally costs one symlink and means the command is always there
+    # the moment a session turns out to need the Teleport toolchain.
+    link "$DEVBOX_DIR/teleport-tools.sh" "${BIN_DIR:-$HOME/.local/bin}/teleport-tools"
+
     # Claude Code skills, one symlink per skill (same approach as the root
     # install.sh, so both stay consistent).
     if [ -d "$CONFIG_DIR/agentic/skills" ]; then

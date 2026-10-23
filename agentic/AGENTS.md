@@ -1,3 +1,32 @@
+## Teleport tooling on dev boxes
+
+On a Teleport beam the Teleport toolchain is **not** installed by
+default — a stock box has no `make`, `go`, `cargo`, `pnpm` or
+`golangci-lint`. If a task needs to build, lint or test
+`gravitational/core` or `gravitational/access-graph`, install it rather
+than reporting the missing tool as a blocker:
+
+    teleport-tools              # full (default)
+    teleport-tools backend      # Go, golangci-lint, buf, protoc, Rust
+    teleport-tools frontend     # Node, pnpm, Rust + wasm32, wasm-opt
+    teleport-tools --dry-run    # print resolved versions, install nothing
+
+It takes several minutes and ~1.5GB, so pick the narrowest profile that
+covers the task and say what you are about to do before starting it.
+Re-running is safe: every step is skipped when already satisfied.
+
+Run `ghlogin` first if `gh auth status` fails. The version pins are read
+from the private `gravitational/core`, and without a login the script
+falls back to the public `gravitational/teleport`, which trails core by a
+release or two.
+
+`docker` is unavailable on a beam, so access-graph's `make postgres-start`
+and the docker-compose dev stack cannot run there. Go and pnpm builds,
+lint and unit tests all work.
+
+Implemented by `devbox/teleport-tools.sh` in the config repo; see
+`devbox/README.md` for what it deliberately omits.
+
 ## General best practices
 
 - Run shell scripts through shellcheck.
