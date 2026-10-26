@@ -470,29 +470,55 @@ install_rust_wasm_target() {
     ok "rust target $RUST_WASM_TARGET"
 }
 
-# `make build-wasm` runs wasm-opt over the compiled ironrdp module. core's own
-# ensure-wasm-opt target installs it exactly this way, so the version matches
-# what CI uses.
+# `make build-wasm` runs wasm-opt over the compiled ironrdp module -- the only
+# target in core that needs it, so this step matters for Desktop Access work and
+# for nothing else.
 #
-# This compiles from source and is by far the slowest step here (several
-# minutes). The version check is only "is it present": the crate version
-# (0.116.1) and the version the binary reports (binaryen's, 116) are different
-# numbering schemes, so comparing them would always miss.
+# core's own ensure-wasm-opt target does `cargo install wasm-opt@<version>`,
+# which builds the whole of binaryen's C++ from source through the crate's cc
+# build script: ten-plus minutes on a beam, and it used to be by far the longest
+# step in this script. The crate is only a thin wrapper, and upstream binaryen
+# ships the identical tool as a prebuilt static binary per release, so that is
+# fetched instead -- about a minute, and the result is byte-for-byte the same
+# optimiser CI runs.
+#
+# The two version schemes have to be bridged to do that: the crate numbers
+# releases 0.<binaryen-major>.<crate-patch> (0.116.1), while the release tag and
+# the binary itself use binaryen's own major alone (version_116). Only the major
+# identifies the upstream release, so the crate patch is dropped.
+#
+# The archive is ~80MB because it carries every binaryen tool plus a static
+# libbinaryen; only wasm-opt is lifted out of it (14MB, statically linked, no
+# sibling files needed at runtime). x86_64 is hardcoded, consistent with the Go
+# and Node steps above.
+#
+# The version check is only "is it present", unchanged from the cargo era: good
+# enough because binaryen majors do not change wasm-opt's behaviour on our
+# input, and a mismatched-but-working wasm-opt is not worth a 10-minute rebuild.
 #
 # Not installed: wasm-bindgen-cli. core reads its version out of Cargo.lock and
 # installs it itself in ensure-wasm-deps, which cannot be done without the
 # checkout in hand.
 install_wasm_opt() {
-    have cargo || { warn "cargo absent; skipping wasm-opt"; return 1; }
     if have wasm-opt; then
         skip "wasm-opt present"
         return 0
     fi
-    step "wasm-opt $TP_WASM_OPT_VERSION (compiles from source, several minutes)"
-    if cargo install --locked "wasm-opt@$TP_WASM_OPT_VERSION" >/dev/null 2>&1; then
-        ok "wasm-opt $TP_WASM_OPT_VERSION"
+
+    local major="$TP_WASM_OPT_VERSION"
+    case "$major" in
+        0.*) major=$(printf '%s\n' "$major" | cut -d. -f2) ;;
+          *) major=$(printf '%s\n' "$major" | cut -d. -f1) ;;
+    esac
+
+    step "wasm-opt (binaryen version_$major, prebuilt)"
+    if install_from_tarball \
+        "https://github.com/WebAssembly/binaryen/releases/download/version_${major}/binaryen-version_${major}-x86_64-linux.tar.gz" \
+        wasm-opt
+    then
+        ok "wasm-opt (binaryen version_$major)"
     else
-        warn "wasm-opt install failed"
+        warn "wasm-opt install failed; build it from source with: cargo install --locked wasm-opt@$TP_WASM_OPT_VERSION"
         return 1
     fi
 }
@@ -575,10 +601,14 @@ profile_steps() {
                           install_wasm_opt
             ;;
         full)
+            # wasm-opt last on purpose: it is the biggest download and the
+            # narrowest in use (only `make build-wasm`), so an interrupted full
+            # run still leaves everything else installed.
             printf '%s\n' install_go install_golangci_lint install_buf \
                           install_protoc install_node install_rust \
-                          install_rust_wasm_target install_wasm_opt \
-                          install_helm install_helm_unittest
+                          install_rust_wasm_target \
+                          install_helm install_helm_unittest \
+                          install_wasm_opt
             ;;
     esac
 }
