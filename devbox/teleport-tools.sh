@@ -19,7 +19,30 @@
 
 set -euo pipefail
 
-DEVBOX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# This is the one devbox script that normally runs through a symlink: link.sh
+# points $BIN_DIR/teleport-tools at it so the command is always on PATH. That
+# makes ${BASH_SOURCE[0]} the *link* ($HOME/.local/bin/teleport-tools), not
+# this file, so taking its dirname directly would look for lib.sh next to the
+# link and die with "No such file or directory". The link has to be resolved
+# before lib.sh can be found -- which is also why this cannot be a lib.sh
+# helper.
+#
+# Hand-rolled rather than `readlink -f` / `realpath`: this repo is shared with
+# macOS, whose BSD userland has neither until Monterey 12.3. The loop handles a
+# link that points at another link, and the `case` re-anchors a relative link
+# target, which readlink reports relative to the directory holding the link.
+_tt_src="${BASH_SOURCE[0]}"
+while [ -L "$_tt_src" ]; do
+    _tt_dir="$(cd -P "$(dirname "$_tt_src")" && pwd)"
+    _tt_src="$(readlink "$_tt_src")"
+    case "$_tt_src" in
+        /*) ;;
+         *) _tt_src="$_tt_dir/$_tt_src" ;;
+    esac
+done
+DEVBOX_DIR="$(cd -P "$(dirname "$_tt_src")" && pwd)"
+unset _tt_src _tt_dir
+
 # shellcheck source=./lib.sh
 . "$DEVBOX_DIR/lib.sh"
 
