@@ -1,0 +1,13 @@
+{
+  "defaultProvider": "beams-anthropic",
+  "defaultModel": "claude-opus-5-5",
+  "defaultThinkingLevel": "high",
+  "enabledModels": [
+    "beams-anthropic/*",
+    "beams-openai/*"
+  ],
+  "skills": [
+    "~/.claude/skills"
+  ],
+  "enableInstallTelemetry": false
+}

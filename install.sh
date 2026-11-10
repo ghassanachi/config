@@ -81,6 +81,24 @@ for skill_dir in "$CONFIG_DIR"/agentic/skills/*/; do
     ln -sf "${skill_dir%/}" "$HOME/.claude/skills/$skill_name"
 done
 
+# Pi (pi.dev) — link individual entries, since ~/.pi/agent also holds
+# sessions/ and auth.json that must stay local. AGENTS.md is the same
+# personal CLAUDE.md Claude Code uses; APPEND_SYSTEM.md patches over the
+# Claude-only parts. Skills are shared via settings.json -> ~/.claude/skills.
+# Inference goes through the Beams proxies: run `beams-proxy` before `pi`.
+mkdir -p "$HOME/.pi/agent/extensions"
+ln -sf "$CONFIG_DIR/claude/CLAUDE.md" "$HOME/.pi/agent/AGENTS.md"
+for f in APPEND_SYSTEM.md models.json settings.json; do
+    ln -sf "$CONFIG_DIR/pi/$f" "$HOME/.pi/agent/$f"
+done
+for d in agents prompts extensions/subagent; do
+    if [ -d "$HOME/.pi/agent/$d" ] && [ ! -L "$HOME/.pi/agent/$d" ]; then
+        echo "WARNING: ~/.pi/agent/$d is a real directory; not replacing it"
+        continue
+    fi
+    ln -sfn "$CONFIG_DIR/pi/$d" "$HOME/.pi/agent/$d"
+done
+
 # jj — symlink only config.toml; $HOME/.config/jj/repos holds per-repo state
 mkdir -p $HOME/.config/jj
 ln -sf $CONFIG_DIR/jj/config.toml $HOME/.config/jj/config.toml
