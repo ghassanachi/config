@@ -1,0 +1,244 @@
+#!/usr/bin/env bash
+# Run the Teleport Beams inference proxies in the background, so local
+# harnesses (Pi, scripts, curl) can reach the tenant's OpenAI and Anthropic
+# endpoints without dedicating a terminal pane to each `tsh proxy app`.
+#
+# Usage:
+#   beams-proxy [start|stop|restart|status|logs] [openai|anthropic|all]
+#
+# Examples:
+#   beams-proxy                   # same as `beams-proxy start all`
+#   beams-proxy start anthropic   # only the Anthropic endpoint
+#   beams-proxy status
+#   beams-proxy logs openai       # follow one proxy's log
+#   beams-proxy stop              # tear everything down
+#
+# Environment:
+#   BEAMS_TENANT   Tenant proxy address, e.g. `my-tenant.beams.sh`. Falls back
+#                  to $MY_TENANT (the name used in the Beams docs). When unset,
+#                  the active `tsh` profile is used as-is.
+#
+# The ports are fixed because ~/.pi/agent/models.json (pi/models.json in the
+# config repo) hard-codes them. Change both together.
+#
+# NOTE: deliberately written for bash 3.2 (macOS /bin/bash): no associative
+# arrays, no `wait -n`, no `${var,,}`.
+
+set -euo pipefail
+
+TENANT="${BEAMS_TENANT:-${MY_TENANT:-}}"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/beams-proxy"
+APPS="openai anthropic"
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [start|stop|restart|status|logs] [openai|anthropic|all]
+
+Run the Beams inference proxies (tsh proxy app) in the background.
+
+  openai     -> http://127.0.0.1:$(port_for openai)
+  anthropic  -> http://127.0.0.1:$(port_for anthropic)
+
+Tenant: \$BEAMS_TENANT or \$MY_TENANT (current: ${TENANT:-<active tsh profile>})
+State:  $STATE_DIR
+EOF
+}
+
+port_for() {
+    case "$1" in
+        openai) echo 18443 ;;
+        anthropic) echo 18444 ;;
+        *) echo "error: unknown app: $1" >&2; return 1 ;;
+    esac
+}
+
+# Expand the optional app argument into a list of app names.
+resolve_apps() {
+    case "${1:-all}" in
+        all) echo "$APPS" ;;
+        openai|anthropic) echo "$1" ;;
+        *) echo "error: unknown app: $1 (expected openai, anthropic or all)" >&2; return 2 ;;
+    esac
+}
+
+# ==============================================================================
+# Process bookkeeping
+# ==============================================================================
+
+# Each proxy gets a pidfile and a log under $STATE_DIR. A pid alone is not
+# trusted: after a reboot or crash it may have been recycled by an unrelated
+# process, so we also check that it is still a `tsh proxy app` for this app
+# before reporting it as running or sending it a signal.
+pidfile() { echo "$STATE_DIR/$1.pid"; }
+logfile() { echo "$STATE_DIR/$1.log"; }
+
+running_pid() {
+    local app="$1" pf pid cmd
+    pf="$(pidfile "$app")"
+    [ -f "$pf" ] || return 1
+    pid="$(cat "$pf")"
+    cmd="$(ps -p "$pid" -o command= 2>/dev/null || true)"
+    case "$cmd" in
+        *"tsh proxy app $app"*) echo "$pid" ;;
+        *) rm -f "$pf"; return 1 ;;
+    esac
+}
+
+# Any HTTP response at all (even a 404) means the local listener is up; curl
+# only exits non-zero here when nothing accepts the connection.
+port_open() {
+    curl -s -o /dev/null --max-time 2 "http://127.0.0.1:$1/"
+}
+
+# ==============================================================================
+# Login
+# ==============================================================================
+
+# `tsh proxy app` may prompt for a browser login or MFA when the session has
+# expired. Backgrounded, that prompt would hang invisibly, so make sure we
+# have a valid session in the foreground first.
+ensure_login() {
+    if tsh status >/dev/null 2>&1; then
+        return 0
+    fi
+    if [ -z "$TENANT" ]; then
+        echo "error: not logged in to Teleport and no tenant set." >&2
+        echo "       Export BEAMS_TENANT=<tenant>.beams.sh or run 'tsh login --proxy=<tenant>'." >&2
+        exit 1
+    fi
+    echo "Logging in to $TENANT..."
+    tsh login --proxy="$TENANT"
+}
+
+# ==============================================================================
+# Commands
+# ==============================================================================
+
+start_one() {
+    local app="$1" port pid log
+    port="$(port_for "$app")"
+    log="$(logfile "$app")"
+
+    if pid="$(running_pid "$app")"; then
+        echo "$app: already running (pid $pid, port $port)"
+        return 0
+    fi
+    if port_open "$port"; then
+        echo "error: $app: port $port is already in use by another process" >&2
+        return 1
+    fi
+
+    # --proxy is only passed when a tenant is configured, so an already
+    # logged-in profile works without any extra setup.
+    local proxy_args=()
+    [ -n "$TENANT" ] && proxy_args=(--proxy="$TENANT")
+
+    # nohup + </dev/null detaches the proxy from this terminal: closing the
+    # window (SIGHUP) won't kill it and it can never block on stdin.
+    {
+        echo "=== $(date '+%Y-%m-%d %H:%M:%S') starting tsh proxy app $app on :$port"
+    } >>"$log"
+    nohup tsh proxy app "$app" ${proxy_args[@]+"${proxy_args[@]}"} --port="$port" \
+        >>"$log" 2>&1 </dev/null &
+    pid=$!
+    echo "$pid" >"$(pidfile "$app")"
+
+    # Wait for the listener so `beams-proxy && pi` is race-free. Bail out
+    # early if tsh exits (bad app name, no access, expired cert, ...).
+    for _ in $(seq 1 30); do
+        if port_open "$port"; then
+            echo "$app: started (pid $pid) -> http://127.0.0.1:$port"
+            return 0
+        fi
+        if ! kill -0 "$pid" 2>/dev/null; then
+            break
+        fi
+        sleep 0.5
+    done
+
+    echo "error: $app: proxy did not come up; last log lines from $log:" >&2
+    tail -n 15 "$log" >&2
+    stop_one "$app" >/dev/null 2>&1 || true
+    return 1
+}
+
+stop_one() {
+    local app="$1" pid
+    if ! pid="$(running_pid "$app")"; then
+        echo "$app: not running"
+        return 0
+    fi
+
+    kill "$pid" 2>/dev/null || true
+    for _ in $(seq 1 10); do
+        kill -0 "$pid" 2>/dev/null || break
+        sleep 0.5
+    done
+    # tsh normally exits promptly on SIGTERM; SIGKILL is the fallback for a
+    # proxy wedged mid-request.
+    kill -0 "$pid" 2>/dev/null && kill -9 "$pid" 2>/dev/null || true
+
+    rm -f "$(pidfile "$app")"
+    echo "$app: stopped (pid $pid)"
+}
+
+status_one() {
+    local app="$1" port pid health
+    port="$(port_for "$app")"
+    if pid="$(running_pid "$app")"; then
+        if port_open "$port"; then health="listening"; else health="NOT listening"; fi
+        printf '%-10s running  pid %-7s http://127.0.0.1:%s (%s)\n' "$app" "$pid" "$port" "$health"
+    else
+        printf '%-10s stopped\n' "$app"
+    fi
+}
+
+main() {
+    local cmd="${1:-start}" app rc=0
+    case "$cmd" in
+        -h|--help|help) usage; exit 0 ;;
+    esac
+
+    if ! command -v tsh >/dev/null 2>&1; then
+        echo "error: tsh not found on PATH" >&2
+        exit 1
+    fi
+    mkdir -p "$STATE_DIR"
+
+    # Resolve the app list once, up front: an `exit` inside the `$(...)` of a
+    # for-loop would only leave the subshell and the typo would be ignored.
+    local apps
+    apps="$(resolve_apps "${2:-all}")" || exit 2
+
+    case "$cmd" in
+        start)
+            ensure_login
+            for app in $apps; do start_one "$app" || rc=1; done
+            ;;
+        stop)
+            for app in $apps; do stop_one "$app" || rc=1; done
+            ;;
+        restart)
+            for app in $apps; do stop_one "$app" || rc=1; done
+            ensure_login
+            for app in $apps; do start_one "$app" || rc=1; done
+            ;;
+        status)
+            for app in $apps; do status_one "$app"; done
+            ;;
+        logs)
+            # Following two logs at once is noisy; require an explicit app.
+            case "${2:-}" in
+                openai|anthropic) exec tail -n 50 -f "$(logfile "$2")" ;;
+                *) echo "usage: $(basename "$0") logs <openai|anthropic>" >&2; exit 2 ;;
+            esac
+            ;;
+        *)
+            usage >&2
+            exit 2
+            ;;
+    esac
+    exit "$rc"
+}
+
+main "$@"
