@@ -35,3 +35,7 @@ palette = 21=#ebdbb2
 
 # URL / link handling
 link-url = true
+
+# Meta keys
+macos-option-as-alt = true
+

@@ -9,5 +9,9 @@
   "skills": [
     "~/.claude/skills"
   ],
-  "enableInstallTelemetry": false
+  "enableInstallTelemetry": false,
+  "lastChangelogVersion": "1.5.2",
+  "packages": [
+    "git:github.com/pkulyn/pi-mode-manager@v1"
+  ]
 }

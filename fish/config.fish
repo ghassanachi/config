@@ -76,6 +76,7 @@ set -U fish_user_paths $HOME/.cargo-target/release $fish_user_paths
 
 # Go
 set -U fish_user_paths $HOME/go/bin $fish_user_paths
+set -U fish_user_paths $HOME/.go/bin $fish_user_paths
 
 # Lua
 set -U fish_user_paths /Library/TeX/texbin/ $fish_user_paths
